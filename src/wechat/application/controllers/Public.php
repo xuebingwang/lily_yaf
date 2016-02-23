@@ -7,4 +7,7 @@
 */
 class PublicController extends MallController {
 
+    public function regAction(){
+
+    }
 }
