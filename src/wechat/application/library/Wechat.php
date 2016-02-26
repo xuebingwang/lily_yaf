@@ -205,7 +205,7 @@ class Wechat
 	private $encodingAesKey;
 	private $encrypt_type;
 	private $appid;
-    private $token_time;
+    private $token_ctime;
     private $token_expires_in;
 	private $appsecret;
 	private $access_token;
@@ -229,7 +229,7 @@ class Wechat
 		$this->token = isset($options['token'])?$options['token']:'';
 		$this->encodingAesKey = isset($options['encodingaeskey'])?$options['encodingaeskey']:'';
 		$this->appid = isset($options['appid'])?$options['appid']:'';
-        $this->token_time = $options['token_time'];
+        $this->token_ctime = $options['token_ctime'];
         $this->token_expires_in = $options['expires_in'];
 		$this->appsecret = isset($options['appsecret'])?$options['appsecret']:'';
 		$this->debug = isset($options['debug'])?$options['debug']:false;
