@@ -1003,13 +1003,13 @@ input.weui_btn_plain_default {
   position: relative;
   line-height: 42px;
   margin-top: 20px;
-  font-size: 17px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
 .weui_dialog_ft a {
+    font-size: 17px;
   display: block;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
@@ -1060,7 +1060,7 @@ input.weui_btn_plain_default {
   color: #353535;
 }
 .weui_btn_dialog.primary {
-  color: #0BB20C;
+  color: #ffba00;
 }
 @media screen and (min-width: 1024px) {
   .weui_dialog {

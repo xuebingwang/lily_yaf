@@ -10,16 +10,29 @@ use \Yaf\Registry;
  * @see http://www.php.net/manual/en/class.yaf-controller-abstract.php
 */
 class Mall extends Controller_Abstract {
-           
+
     protected $config;
     protected $layout;
     protected $user;
+    protected $wechat;
 
     public function init(){
         $this->config = Registry::get('config');
 
         $this->user = session('user_auth');
 
+        $config_setting = M('t_wechat_setting')->get('*',['id'=>1]);
+        $this->wechat = new \Wechat($config_setting);
+        if(!is_not_wx() && empty($this->user)){
+            //如果当前浏览器是微信浏览器,并且当前为未登录状态
+            //重定向至微信,采用网页授权获取用户基本信息接口获取code
+            $forward = urlencode(DOMAIN.$_SERVER['REQUEST_URI']);
+            $url = DOMAIN.'/callback/spread.html?forward='.$forward;
+
+            $this->redirect($this->wechat->getOauthRedirect($url,'','snsapi_base'));
+        }
+
+        $this->config = \Yaf\Registry::get('config');
         $this->layout = Registry::get('layout');
         $this->layout->user = $this->user;
     }
@@ -50,7 +63,7 @@ class Mall extends Controller_Abstract {
     protected function error($message='',$jumpUrl='',$ajax=false) {
         $this->dispatchJump($message,1,$jumpUrl,$ajax);
     }
-    
+
     /**
      * 操作成功跳转的快捷方法
      * @access protected
@@ -62,7 +75,7 @@ class Mall extends Controller_Abstract {
     protected function success($message='',$jumpUrl='',$ajax=false) {
         $this->dispatchJump($message,0,$jumpUrl,$ajax);
     }
-    
+
     /**
      * 默认跳转操作 支持错误导向和正确跳转
      * 调用模板显示 默认为public目录下面的success页面
@@ -82,7 +95,7 @@ class Mall extends Controller_Abstract {
             $data['url']    =   $jumpUrl;
             $this->ajaxReturn($data);
         }
-        
+
         $this->assign('jumpUrl',$jumpUrl);
         //如果设置了关闭窗口，则提示完毕后自动关闭窗口
         $this->assign('status',$status);   // 状态
@@ -173,7 +186,7 @@ class Mall extends Controller_Abstract {
     {
         return $this->getRequest()->module;
     }
-    
+
     /**
      * 返回当前控制器名
      *
@@ -184,7 +197,7 @@ class Mall extends Controller_Abstract {
     {
         return $this->getRequest()->controller;
     }
-    
+
     /**
      * 返回当前动作名
      *
@@ -195,7 +208,7 @@ class Mall extends Controller_Abstract {
     {
         return $this->getRequest()->action;
     }
-    
+
     protected function getPagination($total, $listRows)
     {
         if($total <= $listRows){

@@ -11,6 +11,38 @@
  * 系统函数库
  */
 
+
+/**
+ * 判断是不是微信浏览器
+ * @return bool
+ */
+function is_not_wx(){
+    static $useragent;
+    if(empty($useragent)){
+        $useragent = strtolower(addslashes($_SERVER['HTTP_USER_AGENT']));
+    }
+    return strpos($useragent, 'micromessenger') === false && strpos($useragent, 'windows phone') === false;
+}
+/**
+ * 长度校验方法
+ * @param $str
+ * @param string $max
+ * @param string $min
+ * @return bool
+ */
+function length_regex($str,$max='',$min=''){
+    $length = mb_strlen($str,'UTF8');
+    $return = true;
+
+    if(!empty($min) && !empty($max)){//都不为空时两个都校验
+        $return = $length >= $min && $length <= $max;
+    }elseif(!empty($min)){//最小长度不为空
+        $return = $length >= $min;
+    }elseif(!empty($max)){//最大长度不为空
+        $return = $length <= $max;
+    }
+    return !$return;
+}
 /**
  * 使用正则验证数据
  * @access public

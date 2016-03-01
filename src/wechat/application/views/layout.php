@@ -7,6 +7,7 @@
     <title><?=isset($meta_title) ? $meta_title.' - ' : ''?>百合花</title>
     <meta name="Author" Content="" />
     <meta name="Copyright" Content="深圳麦圈互动科技。All Rights Reserved" />
+    <link href="/style/weui.css" rel="stylesheet" type="text/css" />
     <link href="/style/reset.css" rel="stylesheet" type="text/css" />
     <link href="/style/main.css?<?=md5_file('style/main.css')?>" rel="stylesheet" type="text/css" />
     <block name="style"></block>
@@ -15,11 +16,16 @@
 <body>
 <article class="index padt8">
 
-    <block name="header">
-    </block>
+    <?php if(isset($title)):?>
+    <header class="header">
+        <a href="<?=(isset($back_url) ? $back_url : 'javascript:back();')?>" class="back"><i class="ico i-back"></i></a>
+        <div class="txt"><?=$title?></div>
+    </header>
+    <?php endif;?>
+
     <?php echo $content?>
     <footer class="footer">
-        <a href="index.html" class="link on">
+        <a href="<?=U('/')?>" class="link on">
             <i class="nav nav1"></i>
             <p>首页</p>
         </a>
@@ -37,6 +43,7 @@
 
 <script type="text/javascript" src="/js/framwork.js"></script>
 <script type="text/javascript" src="/js/noclickdelay.js"></script>
+<script type="text/javascript" src="/js/layer/layer.mobile.js"></script>
 <script type="text/javascript" src="/js/common.js?<?=md5_file('js/common.js')?>"></script>
 <block name="script">
 

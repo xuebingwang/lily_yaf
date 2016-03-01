@@ -12,5 +12,6 @@ class IndexController extends Mall {
      *
      */
     public function indexAction(){
+//        die('aaa');
     }
 }

@@ -154,7 +154,7 @@ class CallbackController extends Yaf\Controller_Abstract  {
 
         $user_token = $this->_getWxuserToken();
 
-        $model = M('t_wx_user');
+        $model = new WxUserModel();
         $field = [
             'openid',
             'userid',
@@ -162,12 +162,19 @@ class CallbackController extends Yaf\Controller_Abstract  {
             'headimgurl',
             'unionid',
             'subscribe',
+            'a.id(student_id)',
+            'a.name(student_name)',
+            'a.mobile(student_mobile)',
+            'a.company(student_company)',
         ];
+        $user_info = $model->get(
+            ['[>]t_student(a)'=>['userid'=>'wx_id']],
+            $field,
+            ['openid'=>$user_token['openid']]
+        );
 
-        $user_info = $model->get($field,['unionid'=>$user_token['unionid']]);
-
-        $cpsid = null;
         //如果用户不存在,并且应用授权作用域是snsapi_userinfo,则请求微信获取用户详情信息
+        //非静默授权
         if(empty($user_info) && $user_token['scope'] == 'snsapi_userinfo'){
 
             //先通过openid直接获取用户信息
@@ -194,12 +201,13 @@ class CallbackController extends Yaf\Controller_Abstract  {
                 die;
             }
         }elseif(empty($user_info) && $user_token['scope'] == 'snsapi_base'){
+            //静默授权
             //未关注公众号的用户,也执行注册流程,只保存openid和unionid,其他内容置为默认项
             $user_info = [
                             'openid'=>$user_token['openid'],
 			                'nickname'=>'',
                             'sex'=>0,
-                            'unionid'=>$user_token['unionid'],
+                            'unionid'=>isset($user_token['unionid']) ? $user_token['unionid'] : '',
                             'subscribe' => -1
                         ];
 
@@ -209,8 +217,10 @@ class CallbackController extends Yaf\Controller_Abstract  {
                 $this->redirect('/?status=nosub_userregfail');
                 die;
             }
+
             $cpsid = intval(I('state'));
             if($cpsid){
+
             }else{
                 //SeasLog::debug('哇! 这位用户从哪进来的,没有人分享给他网址,竟然自己就进来了!');
             }
