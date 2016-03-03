@@ -1,4 +1,4 @@
-<div class="wrap">
+<div class="wrap padb80">
     <?php
     if(empty($list)):
     ?>
@@ -15,4 +15,10 @@
     endif;
     ?>
 </div>
+<footer class="footer">
+    <a href="<?=U('/member/plan/add')?>" class="add-plan">
+        <i class="plus"></i>
+        添加新的商业计划书
+    </a>
+</footer>
 <?php require_once 'script.php'?>
