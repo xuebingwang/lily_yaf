@@ -162,8 +162,8 @@ input.sub2{background: #ffba00;color: #fff;font-size: .3rem;text-align: center;l
 .review .file .pic2{margin:0 .16rem;width: .28rem;}
 .review-info .padm16{padding: 0 .16rem;}
 
-.add-plan{ width: 100%; color: #252525; font-size: 0.3rem; text-align: center;}
-.plus{ display:inline-block; background: url(../images/ico.png) -0.6rem -4rem no-repeat; width: 0.37rem; height: 0.37rem;}
+.add-plan{ width: 100%; color: #252525; font-size: 0.3rem; text-align: center; line-height:.82rem;}
+.plus{ display:inline-block; background: url(../images/ico.png) -0.6rem -4.2rem no-repeat; width: 0.61rem; height: 0.61rem; vertical-align: middle}
 .w170{width: 1.53rem}
 .mih7{min-height: 6.6rem;}
 .txt-right{text-align: right;}
