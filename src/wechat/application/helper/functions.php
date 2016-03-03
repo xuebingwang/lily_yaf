@@ -11,7 +11,18 @@
  * 系统函数库
  */
 
-
+/**
+ * 字符串截取，多余的以...代替
+ * @param $text
+ * @param $length
+ * @return string
+ */
+function subtext($text, $length)
+{
+    if(mb_strlen($text, 'utf8') > $length)
+        return mb_substr($text, 0, $length, 'utf8').'...';
+    return $text;
+}
 /**
  * 判断是不是微信浏览器
  * @return bool

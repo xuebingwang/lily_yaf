@@ -122,14 +122,18 @@ $(document).ready(function(){
 		icom.fadeOut(loadBox,500);
 		//search
 		$(".header .search").on("click",function(){
-			icom.fadeIn($(".bgshadow"));
-			$('.searchbox').css({"opacity":0,y:-30}).show();
-			$('.searchbox').transition({opacity:1,y:0},200)
+            var search_box = $('.searchbox');
+            if(search_box.is(":visible")){
+                $('.bgshadow,.searchbox').fadeOut();
+            }else{
+                icom.fadeIn($(".bgshadow"));
+                search_box.css({"opacity":0,y:-30}).show()
+                    .transition({opacity:1,y:0},200);
+            }
 		});
 
 		$('.bgshadow').on("click",function(){
-			$(".bgshadow").hide()
-			$('.searchbox').hide()
+			$('.bgshadow,.searchbox').fadeOut()
 		});
 		//download
 		$('.kejian .download').on("click",function(){

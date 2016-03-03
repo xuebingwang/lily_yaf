@@ -83,7 +83,7 @@
                             target.show().prev().remove();
                         },
                         'FileUploaded': function(up, file, info) {
-                            target.next('input').val(Qiniu.getUrl(info.key));
+                            target.next('input').val(Qiniu2.getUrl(info.key));
                         },
                         'Error': function(up, err, errTip) {
                             layer.alert(errTip);

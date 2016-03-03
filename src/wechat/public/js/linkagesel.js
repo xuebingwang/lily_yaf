@@ -38,11 +38,13 @@ XBW.linkage = {
             //选择的节点没有下级时
             if(_self.data[root] == null){
                 $(this) .parent().nextAll().remove();
-                options.change_callback($this);
+                //options.change_callback($this);
                 return false;
             }
 
-            var sel_html = '<select name="xbw_linkage[]" id="'+options.menu_id+root+XBW.index+'">';
+            var id = options.menu_id+root+XBW.index;
+            XBW.index++;
+            var sel_html = '<select name="xbw_linkage[]" id="'+id+'">';
             if(options.emptyText != ''){
                 sel_html    += '<option selected value="">'+options.emptyText+'</option>'
             }
@@ -61,7 +63,7 @@ XBW.linkage = {
             }
 
             //为下拉框绑定事件
-            $('#'+options.menu_id+root+XBW.index).change(function(){
+            $('#'+id).change(function(){
                 $('#'+options.district_id).val(this.value);
                 //if(root > 1 && this.value == ''){
                 //    $(options.selector+' .'+options.district_id).val($(options.selector+' #'+options.menu_id+root).prev().val());
@@ -73,10 +75,8 @@ XBW.linkage = {
 
             //自动选择，并触发事件
             if(parents[root] != null){
-                $('#'+options.menu_id+root+XBW.index).val(parents[root]).change();
+                $('#'+id).val(parents[root]).change();
             }
-            XBW.index++;
-
         };
         
         //设置json数据
@@ -87,7 +87,6 @@ XBW.linkage = {
                 this.buildSelect(this.getParentsKey(options.selected));
             }, this));
         }else if(typeof(this.data) == 'object'){
-            
             this.buildSelect(this.getParentsKey(options.selected));
         };
 

@@ -8,14 +8,56 @@ use Core\Mall;
 */
 class PlanController extends Mall {
 
+    public function init(){
+        parent::init();
+        if(empty($this->user['student_id'])){
+            $this->error('请您先做新人报道！');
+        }
+    }
+
+    public function indexAction(){
+        $where = [
+            'AND'=>[
+                'a.status'=>1,
+                'student_id'=>$this->user['student_id']
+                ]
+        ];
+        $order_by = 'a.insert_time DESC';
+
+        $page = intval(I('page',0));
+
+        $where['LIMIT'] = [$page*$this->config->application->pagenum,$this->config->application->pagenum];
+        $where['ORDER'] = $order_by;
+
+        $list = M('t_business_plan(a)')->select(
+            [
+                '[><]t_category(b)'=>['a.category'=>'id'],
+                '[>]t_business_plan_count(d)'=>['a.id'=>'plan_id','AND'=>['d.wx_id'=>$this->user['userid'],'d.type'=>1]],
+            ],
+            [
+                'a.*',
+                'b.title(category_name)',
+                'd.wx_id',
+            ],
+            $where
+        );
+
+        $this->assign('list',$list);
+//        echo M()->last_query();
+//        die;
+        if(IS_AJAX){
+            if(empty($list)){
+                $this->error('没有更多数据了！');
+            }
+            $this->success('ok','',['html'=>$this->render('ajax.list')]);
+        }
+
+        $this->layout->title = '我的商业计划书';
+    }
     /**
      *
      */
     public function addAction(){
-
-        if(empty($this->user['student_id'])){
-            $this->error('请您先报道！');
-        }
         if(IS_POST){
             $data = [];
             $data['title'] = I('title');

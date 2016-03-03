@@ -220,7 +220,9 @@ class Medoo {
 
             if (isset($match[1], $match[2])) {
                 array_push($stack, $this->column_quote($match[1]) . ' AS ' . $this->column_quote($match[2]));
-            } else {
+            } elseif(strpos($value,'*') !== FALSE) {
+                array_push($stack, $value);
+            }else{
                 array_push($stack, $this->column_quote($value));
             }
         }
@@ -507,7 +509,16 @@ class Medoo {
     }
 
     protected function select_context($table, $join, &$columns = null, $where = null, $column_fn = null) {
-        $table = '"' . $table . '"';
+
+        preg_match('/([a-zA-Z0-9_\-\.]*)\s*\(([a-zA-Z0-9_\-]*)\)/i', $table, $match);
+
+        if (isset($match[1], $match[2])) {
+
+            $table = '"' . $match[1] . '" AS '.$match[2];
+        }else{
+            $table = '"' . $table . '"';
+        }
+
         $join_key = is_array($join) ? array_keys($join) : null;
 
         if (
@@ -540,11 +551,20 @@ class Medoo {
                         else {
 //                             $relation = 'ON ' . $table . '."' . key($relation) . '" = "' . (isset($match[5]) ? $match[5] : $match[3]) . '"."' . current($relation) . '"';
 
+
+                            $john_relation_tail = '';
+                            if(isset($relation['AND']) and is_array($relation['AND'])){
+                                foreach($relation['AND'] as $and_l=>$and_r){
+
+                                    $john_relation_tail .= ' AND '.$and_l.'= \''.$and_r.'\'';
+                                }
+                            }
                             /*
                              *  If the key looks like `___.___` (. as delimiter between table and column)
                             *  => Don't need the $table variable
                             */
                             $splitted_key_relation = explode('.', key($relation));
+//                            var_dump($splitted_key_relation);
                             if (count($splitted_key_relation) == 2) {
                                 $key_relation = implode('"."',$splitted_key_relation);
                                 $relationQuery  = 'ON "' . $key_relation . '" = "';
@@ -555,6 +575,7 @@ class Medoo {
                                 $relationQuery .= (isset($match[5]) ? $match[5] : $match[3]) . '"."' . current($relation) . '"';
                                 $relation = $relationQuery;
                             }
+                            $relation .= $john_relation_tail;
                         }
                     }
 

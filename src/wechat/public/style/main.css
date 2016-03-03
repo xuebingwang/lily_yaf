@@ -128,7 +128,7 @@ body{font-family:  "Microsoft YaHei", Arial, Helvetica, sans-serif;background: #
 .form li .inpt2{width: 4rem;padding: 0 .1rem;border: #e1e5ea 1px solid;line-height: .48rem;font-size: .18rem;border-radius: .1rem;}
 .form li .pic1{width: 1.78rem;height: 1.17rem;border: #e5e9ed 1px solid;border-radius: .2rem;}
 /* Here we reflect some of the styles from .dk_container to achieve the same visual also when without javascript */
-.dk_wrap{position:relative;border:#e1e5ea 1px solid;display:inline-block;width:100%;vertical-align:top;height:.48rem;background:#fff;overflow:hidden;border-radius:0.15rem;transition:border-color .5s ease;}
+.dk_wrap{position:relative;border:#e1e5ea 1px solid;display:inline-block;width:100%;vertical-align:top;height:.48rem;background:#fff;overflow:hidden;border-radius:0.15rem;transition:border-color .5s ease; margin-right: 2px;}
 .dk_wrap:after{position:absolute;display:block;top:50%;margin-top: -.08rem;right:0.18rem;content:'';border-left:.08rem solid transparent;border-right:.08rem solid transparent;border-top:.14rem solid #a4a4a4;pointer-events:none;}
 .dk_wrap select{position:relative;;font-size:0.18rem;line-height:.48rem;display:block;width:1.2rem;padding:0;padding-left:0.1rem;border:0;color:#333;;text-overflow:ellipsis;overflow: hidden;white-space: nowrap;;background:transparent;background:rgba(255,255,255,0);cursor:pointer;border-radius:0;box-shadow:none;appearance:none;-moz-appearance:none;-webkit-appearance:none;}
 .dk_wrap select:focus{text-shadow:none;}

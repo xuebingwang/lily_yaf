@@ -8,22 +8,175 @@ use Core\Mall;
 */
 class PlanController extends Mall {
 
-    public function indexAction(){
+    public function detailAction($id){
 
-        $where = ['status'=>1];
-
-        $order = I('order','view_count DESC');
-
-        $page = intval(I('page',0));
-        $list = M('t_business_plan')->select('*',
+        $id = intval($id);
+        $item = M('t_business_plan(a)')->get(
             [
-                'AND'=>$where,
-                'LIMIT'=>[$page*$this->config->application->pagenum,$this->config->application->pagenum],
-                'ORDER'=>$order
-            ]
+                '[>]t_business_plan_count(b)'=>['a.id'=>'plan_id','AND'=>['b.wx_id'=>$this->user['userid'],'b.type'=>1]],
+                '[><]t_student(c)'=>['a.student_id'=>'id'],
+            ],
+            ['a.*','b.wx_id','c.name(student_name)','c.company'],
+            ['a.id'=>$id]
         );
 
-        echo M()->last_query();
-        var_dump($list);die;
+        if(empty($item)){
+            $this->error('没有找到指定的计划书！');
+        }
+
+        $this->assign('item',$item);
+//        var_dump($item);die;
+        $this->_add_count($id,0,$item['view_count']);
+        $this->layout->title = '商业计划书详情';
+    }
+
+    /**
+     * @param $id
+     * @param $type
+     * @param $count
+     * @return bool
+     */
+    private function _add_count($id,$type,$count){
+
+        $data = [
+            'wx_id'         => $this->user['userid'],
+            'plan_id'       => $id,
+            'type'          => $type,
+        ];
+
+        if(!empty(M('t_business_plan_count')->get('wx_id',['AND'=>$data]))){
+            return false;
+        }
+        $columns = ['view_count','down_count','like_count'];
+        $data['insert_time'] = time_format();
+        return M('t_business_plan_count')->insert($data,true) && M('t_business_plan')->update([$columns[$type]=>$count+1],['id'=>$id]);
+    }
+
+    /**
+     * 点赞计划书
+     */
+    public function likeAction(){
+        $id = intval(I('id',0));
+        if(empty($id)){
+            $this->error('参数错误，计划书ID不能为空！');
+        }
+        $item = M('t_business_plan(a)')->get(
+            [
+                '[>]t_business_plan_count(b)'=>['a.id'=>'plan_id','AND'=>['b.wx_id'=>$this->user['userid'],'b.type'=>2]],
+            ],
+            ['a.like_count','b.wx_id'],
+            ['a.id'=>$id]
+        );
+        if(empty($item)){
+            $this->error('没有找到计划书！');
+        }
+
+        if(!empty($item['wx_id'])){
+            $this->error('您已经点过赞了，不能重复点赞！');
+        }
+
+        if($this->_add_count($id,2,$item['like_count'])){
+
+            $this->success('点赞成功','',['count'=>$item['like_count']+1]);
+        }else{
+            $this->error('点赞失败，请重新再试！');
+        }
+
+    }
+
+    /**
+     * 下载计划书附件
+     */
+    public function downFileAction(){
+        if(empty($this->user['student_id'])){
+            $this->error('下载计划书需要新人报道！');
+        }
+
+        $id = intval(I('id',0));
+        if(empty($id)){
+            $this->error('参数错误，计划书ID不能为空！');
+        }
+        $item = M('t_business_plan')->get(['file','down_count'],['id'=>$id]);
+
+        if(empty($item)){
+            $this->error('没有找到计划书！');
+        }
+
+        $this->_add_count($id,1,$item['down_count']);
+
+        $this->success('正在下载',get_qiniu_file_durl($item['file']));
+    }
+
+    /**
+     * 计划书列表（学生端）
+     */
+    public function indexAction(){
+
+        $where = ['AND'=>['a.status'=>1]];
+        $keyword = I('keyword');
+        if(!empty($keyword)){
+            $where['AND']['OR'] = [
+                'a.title[~]'=>$keyword,
+                'a.description[~]'=>$keyword,
+            ];
+        }
+        $cate_id = I('cate_id');
+        if(!empty($cate_id)){
+            $where['AND']['a.category'] = $cate_id;
+        }
+        $order = I('order');
+        $order_list = [
+            'like'=>'like_count DESC',
+            'down'=>'down_count DESC',
+        ];
+        $order_by = 'a.insert_time DESC';
+        if(array_key_exists($order,$order_list)){
+            $order_by = $order_list[$order];
+        }
+
+        $page = intval(I('page',0));
+
+        $where['LIMIT'] = [$page*$this->config->application->pagenum,$this->config->application->pagenum];
+        $where['ORDER'] = $order_by;
+
+        $list = M('t_business_plan(a)')->select(
+            [
+                '[><]t_category(b)'=>['a.category'=>'id'],
+                '[><]t_student(c)'=>['a.student_id'=>'id'],
+                '[>]t_business_plan_count(d)'=>['a.id'=>'plan_id','AND'=>['d.wx_id'=>$this->user['userid'],'d.type'=>1]],
+            ],
+            [
+                'a.*',
+                'b.title(category_name)',
+                'c.name(student_name)',
+                'd.wx_id',
+            ],
+            $where
+        );
+
+        $this->assign('list',$list);
+//        echo M()->last_query();
+//        die;
+        if(IS_AJAX){
+            if(empty($list)){
+                $this->error('没有更多数据了！');
+            }
+            $this->success('ok','',['html'=>$this->render('ajax.list')]);
+        }
+
+        $cate_list = M('t_category(a)')->select(
+            [
+                '[><]t_business_plan(b)'=>['a.id'=>'category'],
+            ],
+            [
+                'a.id',
+                'a.title',
+            ],
+            [
+                'GROUP'=>'a.id'
+            ]
+        );
+        $this->assign('cate_list',$cate_list);
+        $this->layout->title = '商业计划书展示';
     }
 }

@@ -7,3 +7,4 @@
         <a href="#" class="menu4">名师课件</a>
     </div>
 </div>
+<?php require_once __DIR__.'/../common/nav.php'?>

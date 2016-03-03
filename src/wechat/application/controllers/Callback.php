@@ -159,11 +159,12 @@ class CallbackController extends Yaf\Controller_Abstract  {
             'openid',
             'userid',
             'nickname',
-            'headimgurl',
+            't_wx_user.headimgurl',
             'unionid',
             'subscribe',
             'a.id(student_id)',
             'a.name(student_name)',
+            'a.headimgurl(head_logo)',
             'a.mobile(student_mobile)',
             'a.company(student_company)',
         ];

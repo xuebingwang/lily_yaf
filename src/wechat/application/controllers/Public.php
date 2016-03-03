@@ -16,10 +16,10 @@ class PublicController extends Mall {
         if(IS_POST){
             $data['company'] = I('company');
             if(empty($data['company'])){
-                $this->error('公司信息不能为空！');
+                $this->error('公司名称不能为空！');
             }
             if(length_regex($data['company'],20)){
-                $this->error('公司信息最大允许输入20个字符！');
+                $this->error('公司名称最大允许输入20个字符！');
             }
 
             $data['name'] = I('name');
@@ -32,7 +32,7 @@ class PublicController extends Mall {
 
             $data['mobile'] = I('mobile');
             if(empty($data['mobile'])){
-                $this->error('公司信息不能为空！');
+                $this->error('手机号码不能为空！');
             }
             if(regex($data['mobile'],'mobile')){
                 $this->error('请输入正确的手机号码！');
@@ -40,11 +40,14 @@ class PublicController extends Mall {
 
             $data['wx_id'] = $this->user['userid'];
             $data['insert_time'] = time_format();
+            $data['headimgurl'] = $this->user['headimgurl'];
             $this->user['student_id'] = M('t_student')->insert($data);
             if(!empty($this->user['student_id'])){
                 $this->user['student_name'] = $data['name'];
                 $this->user['student_mobile'] = $data['mobile'];
                 $this->user['student_company'] = $data['company'];
+
+                session('user_auth',$this->user);
 
                 $this->success('报道成功！',U('/'));
             }else{

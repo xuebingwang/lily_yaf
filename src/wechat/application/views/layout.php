@@ -14,30 +14,18 @@
 </head>
 
 <body>
-<article class="index padt8">
+<article class="index <?php if(isset($title)) echo 'padt8';?>">
 
-    <?php if(isset($title)):?>
+<block name="header">
+<?php if(isset($title)):?>
     <header class="header">
         <a href="<?=(isset($back_url) ? $back_url : 'javascript:back();')?>" class="back"><i class="ico i-back"></i></a>
         <div class="txt"><?=$title?></div>
     </header>
-    <?php endif;?>
+<?php endif;?>
+</block>
 
     <?php echo $content?>
-    <footer class="footer">
-        <a href="<?=U('/')?>" class="link on">
-            <i class="nav nav1"></i>
-            <p>首页</p>
-        </a>
-        <a href="reviews.html" class="link">
-            <i class="nav nav2"></i>
-            <p>名师点评</p>
-        </a>
-        <a href="my.html" class="link">
-            <i class="nav nav3"></i>
-            <p>我的</p>
-        </a>
-    </footer>
 
 </article>
 
