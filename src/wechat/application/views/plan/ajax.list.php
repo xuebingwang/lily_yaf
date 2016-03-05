@@ -7,7 +7,7 @@
             if(isset($is_teacher) && $is_teacher):
                 $vars['is_teacher'] = 1;
             ?>
-                <a class="right weui_btn weui_btn_mini weui_btn_primary" href="<?=U('/plan/comment/id/'.$item['id'])?>">
+                <a class="right weui_btn weui_btn_mini weui_btn_primary" href="<?=U('/plan/comment',['id'=>$item['id']])?>">
                     点评
                 </a>
             <?php else:?>

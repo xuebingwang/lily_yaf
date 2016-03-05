@@ -112,7 +112,7 @@ Layer.prototype.view = function(){
                                         '<div class="weui_loading_leaf weui_loading_leaf_10"></div>' +
                                         '<div class="weui_loading_leaf weui_loading_leaf_11"></div>' +
                                     '</div>' +
-                                    '<p class="weui_toast_content">数据加载中</p>' +
+                                    '<p class="weui_toast_content">加载中</p>' +
                                 '</div>';
     }else if(config.type == 2){
 

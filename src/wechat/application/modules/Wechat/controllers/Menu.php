@@ -14,7 +14,8 @@ class MenuController extends Core\Wechat{
 
     public function getMenuAction()
     {
-        echo json_encode(['errcode'=>0,'errmsg'=>'成功！','data'=>  $this->wechat->getMenu()]);die;
+        echo json_encode(['errcode'=>0,'errmsg'=>'成功！','data'=>  $this->wechat->getMenu()]);
+        die;
     }
     
     public function createMenuAction()

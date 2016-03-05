@@ -132,7 +132,7 @@ body{font-family:  "Microsoft YaHei", Arial, Helvetica, sans-serif;background: #
 .form li .txtarea{padding:.1rem;border: #e1e5ea 1px solid;font-size: .2rem;line-height: .24rem;border-radius: .2rem;height: 1.5rem;width: 4rem;}
 input.sub1{background: #ffba00;color: #fff;font-size: .3rem;text-align: center;line-height: .74rem;border-radius: .2rem;width: 5.3rem;display: block;margin: 1.15rem auto 0;}
 input.sub2{background: #ffba00;color: #fff;font-size: .3rem;text-align: center;line-height: .74rem;border-radius: .2rem;width: 5.3rem;display: block;margin: .8rem auto 0;}
-.review{padding-bottom: .5rem;}
+.review{padding-bottom: .5rem;margin-top: .1rem;}
 .review .tit{font-size: .25rem;color: #252525;padding: .2rem 0;}
 .review-info{margin-top: .15rem;padding-bottom: .15rem;}
 .review-info .avtar1{vertical-align: top;width: .94rem;}
@@ -153,6 +153,8 @@ input.sub2{background: #ffba00;color: #fff;font-size: .3rem;text-align: center;l
 .review .file input{display: none;}
 .review .file .pic2{margin:0 .16rem;width: .28rem;}
 .review-info .padm16{padding: 0 .16rem;}
+.review .weui_media_box.weui_media_appmsg{ padding: 5px 15px;}
+.review .weui_media_box.weui_media_appmsg .weui_media_hd{ width: 30px; height: 30px; line-height: 30px;}
 
 .add-plan{ width: 100%; color: #252525; font-size: 0.3rem; text-align: center; line-height:.82rem;}
 .plus{ display:inline-block; background: url(../images/ico.png) -0.6rem -4.2rem no-repeat; width: 0.61rem; height: 0.61rem; vertical-align: middle}
