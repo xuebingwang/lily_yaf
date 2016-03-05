@@ -4,8 +4,8 @@
             <img src="<?=imageView2($user['head_logo'])?>" class="img0 avtar" >
         </div>
     </label>
-    <div class="name"><?=$user['student_name']?></div>
-    <div class="com"><?=$user['student_company']?></div>
+    <div class="name"><?=$user['name']?></div>
+    <div class="com"><?=$user['company']?></div>
     <p class="tips">注：直接点击头像换头像</p>
 </div>
 

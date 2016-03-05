@@ -14,7 +14,7 @@ class WxUserModel extends Model{
     public function save(Array $data){
 
         $where = ['unionid'=>$data['unionid']];
-	    $uid = $this->get('userid',$where);
+	    $uid = $this->get('wx_id',$where);
 
         //如果找不到用户数据, 执行注册流程
         if(empty($uid)){
@@ -26,7 +26,7 @@ class WxUserModel extends Model{
         unset($data['openid']);
         unset($data['unionid']);
 
-        return $this->update($data,['userid'=>$uid]);
+        return $this->update($data,['wx_id'=>$uid]);
     }
 
     public function reg(Array $data){
@@ -36,5 +36,31 @@ class WxUserModel extends Model{
         }
         $data['insert_time'] = time_format();
         return $this->insert($data);
+    }
+
+    public function getUser($openid){
+        $field = [
+            'openid',
+            $this->table.'.wx_id',
+            'nickname',
+            't_wx_user.headimgurl',
+            'unionid',
+            'subscribe',
+            'b.id(user_id)',
+            'b.name',
+            'b.headimgurl(head_logo)',
+            'b.mobile',
+            'b.company',
+            'b.is_student',
+            'b.is_teacher',
+            'b.teacher_apply_status',
+        ];
+        return $this->get(
+            [
+                '[>]t_user(b)'=>['wx_id'=>'wx_id','AND'=>['b.status'=>UserModel::STATUS_OK]],
+            ],
+            $field,
+            ['AND'=>['openid'=>$openid]]
+        );
     }
 }

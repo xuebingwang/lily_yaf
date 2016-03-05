@@ -155,24 +155,7 @@ class CallbackController extends Yaf\Controller_Abstract  {
         $user_token = $this->_getWxuserToken();
 
         $model = new WxUserModel();
-        $field = [
-            'openid',
-            'userid',
-            'nickname',
-            't_wx_user.headimgurl',
-            'unionid',
-            'subscribe',
-            'a.id(student_id)',
-            'a.name(student_name)',
-            'a.headimgurl(head_logo)',
-            'a.mobile(student_mobile)',
-            'a.company(student_company)',
-        ];
-        $user_info = $model->get(
-            ['[>]t_student(a)'=>['userid'=>'wx_id']],
-            $field,
-            ['openid'=>$user_token['openid']]
-        );
+        $user_info = $model->getUser($user_token['openid']);
 
         //如果用户不存在,并且应用授权作用域是snsapi_userinfo,则请求微信获取用户详情信息
         //非静默授权
@@ -196,8 +179,8 @@ class CallbackController extends Yaf\Controller_Abstract  {
             }
 
             //开始自动完成用户注册
-            $user_info['userid'] = $model->reg($user_info);
-            if(!$user_info['userid']){
+            $user_info['wx_id'] = $model->reg($user_info);
+            if(!$user_info['wx_id']){
                 $this->redirect('/?status=userregfail');
                 die;
             }
@@ -213,8 +196,8 @@ class CallbackController extends Yaf\Controller_Abstract  {
                         ];
 
             //开始完成用户注册
-            $user_info['userid'] = $model->reg($user_info);
-            if(!$user_info['userid']){
+            $user_info['wx_id'] = $model->reg($user_info);
+            if(!$user_info['wx_id']){
                 $this->redirect('/?status=nosub_userregfail');
                 die;
             }
@@ -277,7 +260,7 @@ class CallbackController extends Yaf\Controller_Abstract  {
             default:
                 $param = '';
                 if($userinfo){
-                    $param = '&cpsid='.$userinfo['userid'];
+                    $param = '&cpsid='.$userinfo['wx_id'];
                 }
                 $this->redirect('/?status=success'.$param);
                 break;

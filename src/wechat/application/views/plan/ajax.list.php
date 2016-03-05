@@ -2,11 +2,19 @@
     <div class="box kejian">
         <div class="padm17">
             <div class="tit">
+            <?php
+            if(isset($is_teacher) && $is_teacher):
+            ?>
+                <a class="right weui_btn weui_btn_mini weui_btn_primary" href="<?=U('/plan/comment/id/'.$item['id'])?>">
+                    点评
+                </a>
+            <?php else:?>
                 <?php if(empty($item['wx_id'])):?>
-                <a href="javascript:" class="right download down-file" item_id="<?=$item['id']?>">下载</a>
+                    <a href="javascript:" class="right download down-file" item_id="<?=$item['id']?>">下载</a>
                 <?php else:?>
-                <a href="<?=get_qiniu_file_durl($item['file'])?>" class="right download">下载</a>
+                    <a href="<?=get_qiniu_file_durl($item['file'])?>" class="right download">下载</a>
                 <?php endif;?>
+            <?php endif;?>
                 <?=$item['title']?>
             </div>
             <div class="subtit">
@@ -25,11 +33,17 @@
             </a>
             <div class="bar">
                 <span>
-                    <i class="ico i-down"></i>
+                <?php if(empty($item['wx_id'])):?>
+                    <a href="javascript:" class="down-file" item_id="<?=$item['id']?>"><i class="ico i-down"></i></a>
+                <?php else:?>
+                    <a href="<?=get_qiniu_file_durl($item['file'])?>"><i class="ico i-down"></i></a>
+                <?php endif;?>
                     <span class="num green"><?=$item['down_count']?></span>
                 </span>
                 <span class="padl6">
-                    <i class="ico i-eye"></i>
+                    <a href="<?=U('/plan/detail/id/'.$item['id'])?>">
+                        <i class="ico i-eye"></i>
+                    </a>
                     <span class="num corl2"><?=$item['view_count']?></span>
                 </span>
                 <span class="padl6">

@@ -1,4 +1,4 @@
-<div class="center"><img src="images/p1.jpg" class="img"></div>
+<div class="center"><img src="/images/p1.jpg" class="img"></div>
 <div class="wrap">
     <div class="box menu">
         <a href="<?=U('/public/reg')?>" class="menu1">新人报到</a>

@@ -276,7 +276,7 @@ input.weui_btn_mini {
   background-color: #DEDEDE;
 }
 .weui_btn_primary {
-  background-color: #04BE02;
+  background-color: #ffba00;
 }
 .weui_btn_primary:not(.weui_btn_disabled):visited {
   color: #FFFFFF;

@@ -10,7 +10,7 @@ class InfoController extends Mall {
 
     public function init(){
         parent::init();
-        if(empty($this->user['student_id'])){
+        if($this->user['is_student'] != UserModel::BOOL_YES){
             $this->error('请您先做新人报道！');
         }
         $this->assign('user',$this->user);
@@ -23,7 +23,7 @@ class InfoController extends Mall {
             $data = [];
             $data['company'] = I('company');
             if(empty($data['company'])){
-                $this->error('公司名称不能为空！');
+                $this->error('公请输入司名称！');
             }
             if(length_regex($data['company'],20)){
                 $this->error('公司名称最大允许输入20个字符！');
@@ -34,7 +34,7 @@ class InfoController extends Mall {
 
             $data['mobile'] = I('mobile');
             if(empty($data['mobile'])){
-                $this->error('手机号码不能为空！');
+                $this->error('请输入手机号码！');
             }
             if(regex($data['mobile'],'mobile')){
                 $this->error('请输入正确的手机号码！');
@@ -42,19 +42,19 @@ class InfoController extends Mall {
 
             $data['name'] = I('name');
             if(empty($data['name'])){
-                $this->error('姓名不能为空！');
+                $this->error('请输入姓名！');
             }
             if(length_regex($data['name'],20)){
                 $this->error('姓名最大允许输入20个字符！');
             }
             $data['update_time'] = time_format();
-            if(M('t_student')->update($data,['id'=>$this->user['student_id']])){
+            if(M('t_user')->update($data,['id'=>$this->user['user_id']])){
                 $this->success('保存成功！');
             }else{
                 $this->error('保存失败，请重新再试或联系客服人员！');
             }
         }
-        $item = M('t_student')->get('*',['id'=>$this->user['student_id']]);
+        $item = M('t_user')->get('*',['id'=>$this->user['user_id']]);
 
         $this->assign('item',$item);
 
@@ -76,7 +76,7 @@ class InfoController extends Mall {
         if(empty($this->user['head_logo'])){
             $this->error('头像修改失败，地址为空！');
         }
-        if(M('t_student')->update(['headimgurl'=>$this->user['head_logo']],['id'=>$this->user['student_id']])){
+        if(M('t_user')->update(['headimgurl'=>$this->user['head_logo']],['id'=>$this->user['user_id']])){
 
             session('user_auth',$this->user);
             $this->success('修改成功！',imageView2($this->user['head_logo'],100,100));

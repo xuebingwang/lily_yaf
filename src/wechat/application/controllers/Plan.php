@@ -8,13 +8,33 @@ use Core\Mall;
 */
 class PlanController extends Mall {
 
+
+    public function commentAction($id){
+
+        if($this->user['is_teacher'] == UserModel::BOOL_YES){
+            $this->error('您需要先通过名师认证才能点评！');
+        }
+        $id = intval($id);
+
+        $item = M('t_business_plan')->get(['id','title'],['id'=>$id]);
+        if(empty($item)){
+            $this->error('没有找到对应的计划书！');
+        }
+
+
+    }
+
+    /**
+     * 计划书详情
+     * @param $id
+     */
     public function detailAction($id){
 
         $id = intval($id);
         $item = M('t_business_plan(a)')->get(
             [
-                '[>]t_business_plan_count(b)'=>['a.id'=>'plan_id','AND'=>['b.wx_id'=>$this->user['userid'],'b.type'=>1]],
-                '[><]t_student(c)'=>['a.student_id'=>'id'],
+                '[>]t_business_plan_count(b)'=>['a.id'=>'plan_id','AND'=>['b.wx_id'=>$this->user['wx_id'],'b.type'=>1]],
+                '[><]t_user(c)'=>['a.student_id'=>'id'],
             ],
             ['a.*','b.wx_id','c.name(student_name)','c.company'],
             ['a.id'=>$id]
@@ -39,7 +59,7 @@ class PlanController extends Mall {
     private function _add_count($id,$type,$count){
 
         $data = [
-            'wx_id'         => $this->user['userid'],
+            'wx_id'         => $this->user['wx_id'],
             'plan_id'       => $id,
             'type'          => $type,
         ];
@@ -62,7 +82,7 @@ class PlanController extends Mall {
         }
         $item = M('t_business_plan(a)')->get(
             [
-                '[>]t_business_plan_count(b)'=>['a.id'=>'plan_id','AND'=>['b.wx_id'=>$this->user['userid'],'b.type'=>2]],
+                '[>]t_business_plan_count(b)'=>['a.id'=>'plan_id','AND'=>['b.wx_id'=>$this->user['wx_id'],'b.type'=>2]],
             ],
             ['a.like_count','b.wx_id'],
             ['a.id'=>$id]
@@ -88,8 +108,8 @@ class PlanController extends Mall {
      * 下载计划书附件
      */
     public function downFileAction(){
-        if(empty($this->user['student_id'])){
-            $this->error('下载计划书需要新人报道！');
+        if($this->user['is_student'] == UserModel::BOOL_NO && $this->user['is_teacher'] == UserModel::BOOL_NO){
+            $this->error('下载计划书需要新人报道或名师认证！');
         }
 
         $id = intval(I('id',0));
@@ -142,8 +162,8 @@ class PlanController extends Mall {
         $list = M('t_business_plan(a)')->select(
             [
                 '[><]t_category(b)'=>['a.category'=>'id'],
-                '[><]t_student(c)'=>['a.student_id'=>'id'],
-                '[>]t_business_plan_count(d)'=>['a.id'=>'plan_id','AND'=>['d.wx_id'=>$this->user['userid'],'d.type'=>1]],
+                '[><]t_user(c)'=>['a.student_id'=>'id'],
+                '[>]t_business_plan_count(d)'=>['a.id'=>'plan_id','AND'=>['d.wx_id'=>$this->user['wx_id'],'d.type'=>1]],
             ],
             [
                 'a.*',

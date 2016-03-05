@@ -10,7 +10,7 @@ class PlanController extends Mall {
 
     public function init(){
         parent::init();
-        if(empty($this->user['student_id'])){
+        if($this->user['is_student'] != UserModel::BOOL_YES){
             $this->error('请您先做新人报道！');
         }
     }
@@ -19,7 +19,7 @@ class PlanController extends Mall {
         $where = [
             'AND'=>[
                 'a.status'=>1,
-                'student_id'=>$this->user['student_id']
+                'student_id'=>$this->user['user_id']
                 ]
         ];
         $order_by = 'a.insert_time DESC';
@@ -32,7 +32,7 @@ class PlanController extends Mall {
         $list = M('t_business_plan(a)')->select(
             [
                 '[><]t_category(b)'=>['a.category'=>'id'],
-                '[>]t_business_plan_count(d)'=>['a.id'=>'plan_id','AND'=>['d.wx_id'=>$this->user['userid'],'d.type'=>1]],
+                '[>]t_business_plan_count(d)'=>['a.id'=>'plan_id','AND'=>['d.wx_id'=>$this->user['wx_id'],'d.type'=>1]],
             ],
             [
                 'a.*',
@@ -87,7 +87,7 @@ class PlanController extends Mall {
                 $this->error('计划书详细描述最大允许输入5000个字符！');
             }
 
-            $data['student_id'] = $this->user['student_id'];
+            $data['student_id'] = $this->user['user_id'];
             $data['insert_time'] = time_format();
             if(M('t_business_plan')->insert($data)){
                 $this->success('保存成功！',U('/'));
