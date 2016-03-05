@@ -1,24 +1,11 @@
 <?php
-use Yaf\Dispatcher;
 /**
  * @name PublicController
  * @author xuebingwang
  * @desc Public控制器
  * @see http://www.php.net/manual/en/class.yaf-controller-abstract.php
 */
-class CallbackController extends Yaf\Controller_Abstract  {
-
-    protected $wechat;
-    protected $raw_data;
-    
-    public function init(){
-//         Dispatcher::getInstance()->returnResponse(true);
-        Dispatcher::getInstance()->disableView();
-        
-        $config_setting = M('t_wechat_setting')->get('*',['id'=>1]);
-        $this->wechat = new Wechat($config_setting);
-    }
-
+class CallbackController extends Core\Wechat  {
 
     /**
      * 微信接口Action
@@ -29,6 +16,7 @@ class CallbackController extends Yaf\Controller_Abstract  {
         $this->raw_data = file_get_contents('php://input');
 
         SeasLog::debug("请求内容==>".$this->raw_data);
+
         $this->wechat->setPostXml($this->raw_data)->getRev();
 
         if(!$this->wechat->valid()){
@@ -158,6 +146,8 @@ class CallbackController extends Yaf\Controller_Abstract  {
         $model = new WxUserModel();
         $user_info = $model->getUser($user_token['openid']);
 
+        SeasLog::debug($model->last_query());
+        SeasLog::debug(var_export($user_info,true));
         //如果用户不存在,并且应用授权作用域是snsapi_userinfo,则请求微信获取用户详情信息
         //非静默授权
         if(empty($user_info) && $user_token['scope'] == 'snsapi_userinfo'){

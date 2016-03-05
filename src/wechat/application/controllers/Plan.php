@@ -11,8 +11,8 @@ class PlanController extends Mall {
 
     public function commentAction($id){
 
-        if($this->user['is_teacher'] == UserModel::BOOL_YES){
-            $this->error('您需要先通过名师认证才能点评！');
+        if($this->user['is_teacher'] != UserModel::BOOL_YES){
+            $this->error('您需要先通过名师认证才能点评！',U('/public/regTeacher'),['btn_text'=>'去认证']);
         }
         $id = intval($id);
 
@@ -21,7 +21,15 @@ class PlanController extends Mall {
             $this->error('没有找到对应的计划书！');
         }
 
-
+        $list = M('t_business_plan_comment(a)')->select(
+            [
+                '[>]t_user(b)'=>['a.user_id'=>'id'],
+            ],
+            ['a.*','b.name','b.headimgurl'],
+            ['AND'=>['a.plan_id'=>$id],'ORDER'=>'a.insert_time DESC']
+        );
+        $this->assign('list',$list);
+        $this->layout->title = '名师点评';
     }
 
     /**

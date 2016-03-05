@@ -43,7 +43,7 @@
         </ul>
     </div>
 
-    <input type="submit" value="报   道" class="sub1">
+    <input type="submit" value="提   交" class="sub1">
     </form>
 </div>
 <block name="script">

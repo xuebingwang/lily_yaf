@@ -2,12 +2,20 @@
     <div class="box kejian">
         <div class="padm17">
             <div class="tit">
+            <?php
+            if(intval(I('is_teacher')) > 0):
+            ?>
+                <a class="right weui_btn weui_btn_mini weui_btn_primary" href="<?=U('/plan/comment/id/'.$item['id'])?>">
+                    点评
+                </a>
+            <?php else:?>
                 <?php if(empty($item['wx_id'])):?>
                 <a href="javascript:" class="right download down-file" item_id="<?=$item['id']?>">下载</a>
                 <?php else:?>
                 <a href="<?=get_qiniu_file_durl($item['file'])?>" class="right download">下载</a>
                 <?php endif;?>
                 <?=$item['title']?>
+            <?php endif;?>
             </div>
             <div class="subtit">
                 <div class="cell class"><?=$item['student_name']?></div>

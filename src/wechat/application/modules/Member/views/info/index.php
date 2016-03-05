@@ -1,7 +1,7 @@
 <div class="person">
     <label class="upload upload-wrap">
         <div id="upload-head" class="pic_tb" name="head_logo" val="<?=$user['head_logo']?>">
-            <img src="<?=imageView2($user['head_logo'])?>" class="img0 avtar" >
+            <img src="<?=empty($user['head_logo']) ? $user['headimgurl'] : imageView2($user['head_logo'])?>" class="img0 avtar" >
         </div>
     </label>
     <div class="name"><?=$user['name']?></div>

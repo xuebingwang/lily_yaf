@@ -89,7 +89,7 @@ class Mall extends Controller_Abstract {
      */
     private function dispatchJump($message,$status=1,$jumpUrl='',$ajax=false) {
         if(IS_AJAX || true === $ajax) {// AJAX提交
-            $data           =   is_array($ajax)?$ajax:array();
+            $data           =   is_array($ajax)?$ajax:[];
             $data['msg']    =   $message;
             $data['status'] =   $status;
             $data['url']    =   $jumpUrl;
@@ -100,6 +100,7 @@ class Mall extends Controller_Abstract {
         //如果设置了关闭窗口，则提示完毕后自动关闭窗口
         $this->assign('status',$status);   // 状态
         $this->assign('message',$message);// 提示信息
+        $this->assign('data',is_array($ajax)?$ajax:[]);
 
         if($status) { //发送成功信息
             //发生错误时候默认停留3秒

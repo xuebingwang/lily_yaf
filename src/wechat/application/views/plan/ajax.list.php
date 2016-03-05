@@ -3,7 +3,9 @@
         <div class="padm17">
             <div class="tit">
             <?php
+            $vars = [];
             if(isset($is_teacher) && $is_teacher):
+                $vars['is_teacher'] = 1;
             ?>
                 <a class="right weui_btn weui_btn_mini weui_btn_primary" href="<?=U('/plan/comment/id/'.$item['id'])?>">
                     点评
@@ -23,7 +25,7 @@
                 <?php $time = strtotime($item['insert_time']);?>
                 <div class="cell date"><?=date('Y-m-d',$time)?> <span class="padl20"><?=date('H:i',$time)?></span></div>
             </div>
-            <a href="<?=U('/plan/detail/id/'.$item['id'])?>">
+            <a href="<?=U('/plan/detail/id/'.$item['id'],$vars)?>">
                 <div class="pic center">
                     <img src="<?=imageMogr2($item['logo'],325,175)?>" class="img">
                 </div>
@@ -41,7 +43,7 @@
                     <span class="num green"><?=$item['down_count']?></span>
                 </span>
                 <span class="padl6">
-                    <a href="<?=U('/plan/detail/id/'.$item['id'])?>">
+                    <a href="<?=U('/plan/detail/id/'.$item['id'],$vars)?>">
                         <i class="ico i-eye"></i>
                     </a>
                     <span class="num corl2"><?=$item['view_count']?></span>

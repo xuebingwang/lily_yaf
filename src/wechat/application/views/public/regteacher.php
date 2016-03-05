@@ -5,13 +5,13 @@
             <li>
                 <div class="lab cell">姓&nbsp; &nbsp; &nbsp; &nbsp;名：</div>
                 <div class="cell">
-                    <input id="name" name="name" type="text" class="inpt2" placeholder="">
+                    <input id="name" name="name" type="text" class="inpt2" placeholder="" value="<?=$user['name']?>">
                 </div>
             </li>
             <li>
                 <div class="lab cell">手机号码：</div>
                 <div class="cell">
-                    <input id="mobile" name="mobile" type="text" class="inpt2" placeholder="">
+                    <input id="mobile" name="mobile" type="text" class="inpt2" placeholder="" value="<?=$user['mobile']?>">
                 </div>
             </li>
             <li>

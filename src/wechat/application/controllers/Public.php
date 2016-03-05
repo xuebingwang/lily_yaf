@@ -65,7 +65,7 @@ class PublicController extends Mall {
 
                 session('user_auth',$this->user);
 
-                $this->success('报道成功！',U('/'));
+                $this->success('报道成功！',U('/plan/index'));
             }else{
                 $this->error('报道失败，请重新再试或联系客服人员！');
             }
@@ -78,11 +78,18 @@ class PublicController extends Mall {
      *  老师认证
      */
     public function regTeacherAction(){
-        if($this->user['is_teacher'] == UserModel::BOOL_YES){
-            $this->error('您已经通过认证了！');
+        $model = new UserModel();
+        $info = $model->get(
+            ['id(user_id)','name','mobile','teacher_apply_status','is_teacher'],
+            ['wx_id'=>$this->user['wx_id']]
+        );
+
+        if($info['is_teacher'] == UserModel::BOOL_YES){
+            session('user_auth',array_merge($this->user,$info));
+            $this->error('您已经通过认证了！',U('/index/teacher'));
         }
 
-        if($this->user['teacher_apply_status'] == UserModel::TEACHER_APPLY_STATUS_WAT){
+        if($info['teacher_apply_status'] == UserModel::TEACHER_APPLY_STATUS_WAT){
             $this->error('您的资料正在审核中，请勿重复提交！');
         }
 
@@ -128,11 +135,10 @@ class PublicController extends Mall {
             }
             $data['teacher_apply_status'] = UserModel::TEACHER_APPLY_STATUS_WAT;
 
-            $model = new UserModel();
             $this->user['user_id'] = $model->save($data);
             if(!empty($this->user['user_id'])){
 
-                $this->success('提交成功，我们会在1~3个工作日内回复！',U('/'));
+                $this->success('提交成功，我们会在1~3个工作日内回复！',U('/index/teacher'));
             }else{
                 $this->error('保存失败，请重新再试或联系客服人员！');
             }
