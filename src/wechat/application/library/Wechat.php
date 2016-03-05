@@ -226,14 +226,15 @@ class Wechat
 
 	public function __construct($options)
 	{
-		$this->token = isset($options['token'])?$options['token']:'';
-		$this->encodingAesKey = isset($options['encodingaeskey'])?$options['encodingaeskey']:'';
-		$this->appid = isset($options['appid'])?$options['appid']:'';
-        $this->token_ctime = $options['token_ctime'];
+		$this->token            = isset($options['token'])?$options['token']:'';
+		$this->encodingAesKey   = isset($options['encodingaeskey'])?$options['encodingaeskey']:'';
+		$this->appid            = isset($options['appid'])?$options['appid']:'';
+        $this->token_ctime      = $options['token_ctime'];
+        $this->access_token     = $options['access_token'];
         $this->token_expires_in = $options['expires_in'];
-		$this->appsecret = isset($options['appsecret'])?$options['appsecret']:'';
-		$this->debug = isset($options['debug'])?$options['debug']:false;
-		$this->logcallback = isset($options['logcallback'])?$options['logcallback']:false;
+		$this->appsecret        = isset($options['appsecret'])?$options['appsecret']:'';
+		$this->debug            = isset($options['debug'])?$options['debug']:false;
+		$this->logcallback      = isset($options['logcallback'])?$options['logcallback']:false;
 	}
 
     /**

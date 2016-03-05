@@ -26,6 +26,7 @@ class WxUserModel extends Model{
         unset($data['openid']);
         unset($data['unionid']);
 
+        $data['update_time'] = time_format();
         return $this->update($data,['wx_id'=>$uid]);
     }
 

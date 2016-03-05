@@ -84,6 +84,7 @@ class CallbackController extends Yaf\Controller_Abstract  {
 
                 if(empty($userinfo)){
                     SeasLog::debug('获取用户失败!');
+                    return false;
                 }
                 $this->_subscribe($userinfo);
 
