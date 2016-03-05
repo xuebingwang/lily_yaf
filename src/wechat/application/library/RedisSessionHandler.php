@@ -90,7 +90,7 @@ class RedisSessionHandler implements SessionHandlerInterface{
         $uid = uniqid("", true);
         $data = $this->namespace;
         $data .= $_SERVER['REQUEST_TIME'];
-        $data .= $_SERVER['HTTP_USER_AGENT'];
+        $data .= isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
         $data .= $_SERVER['SERVER_ADDR'];
         $data .= $_SERVER['SERVER_PORT'];
         $data .= $_SERVER['REMOTE_ADDR'];

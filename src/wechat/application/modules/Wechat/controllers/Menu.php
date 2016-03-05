@@ -14,17 +14,18 @@ class MenuController extends Core\Wechat{
 
     public function getMenuAction()
     {
-        echo json_encode(['errcode'=>0,'errmsg'=>'成功！','data'=>  $this->wechat->getMenu()]);
+        echo json_encode(['errcode'=>0,'errmsg'=>'成功！','data'=>  $this->wechat->getMenu()]);die;
     }
     
     public function createMenuAction()
     {
-        $menus = $this->raw_data;
+        $menus = $this->raw_data['body'];
         foreach ($menus as $key => $menu)
         {
             if(isset($menu['url']) && preg_match("#^http:\/\/(lily)\.(mi360)\.(me)(.*?)#", $menu['url'])){
                 $menus[$key]['url'] = $this->wechat->getOauthRedirect($menu['url'],'index');
             }
+            if(isset($menu['sub_button']) && is_array($menu['sub_button']))
             foreach ($menu['sub_button'] as $k => $v)
             {
                 if(isset($v['url']) && preg_match("#^http:\/\/(lily)\.(mi360)\.(me)(.*?)#", $menu['url'])){
@@ -38,6 +39,7 @@ class MenuController extends Core\Wechat{
         }else{
             echo json_encode(['errcode'=>-1,'errmsg'=>'失败！', 'menu' => $menus]);
         }
+        die;
     }
     
 }
