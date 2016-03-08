@@ -29,9 +29,11 @@ body{font-family:  "Microsoft YaHei", Arial, Helvetica, sans-serif;background: #
 .footer .link .nav1{background-position: 0 0}
 .footer .link .nav2{background-position: 0 -.4rem;}
 .footer .link .nav3{background-position: 0 -.8rem;}
+.footer .link .nav4{background-position: 0 -1.2rem;}
 .footer .link.on .nav1,.footer .link:active .nav1{background-position: -.4rem 0}
 .footer .link.on .nav2,.footer .link:active .nav2{background-position: -.4rem -.4rem;}
 .footer .link.on .nav3,.footer .link:active .nav3{background-position: -.4rem -.8rem;}
+.footer .link.on .nav4,.footer .link:active .nav4{background-position: -.4rem -1.2rem;}
 
 
 /*person*/
@@ -167,6 +169,7 @@ input.sub2{background: #ffba00;color: #fff;font-size: .3rem;text-align: center;l
 .padl6{padding-left: .6rem;}
 .padl20{padding-left: .2rem;}
 .padb80{padding-bottom: .8rem!important;}
+.padb90{padding-bottom: .9rem!important;}
 .corl2{color: #252525;}
 .green{color: #9ccd84}
 .orange{color: #ffae00}

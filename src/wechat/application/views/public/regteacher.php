@@ -1,5 +1,8 @@
 <div class="wrap">
     <form class="ajax-form" action="<?=U('/public/regTeacher')?>" method="post" before="before_submit">
+    <div class="padtb17 orange">
+        *：欢迎加入百合花，在这里，您可以认识更多的学生，有更多的市场机会。
+    </div>
     <div class="box form">
         <ul>
             <li>

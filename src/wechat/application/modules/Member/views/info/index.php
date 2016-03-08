@@ -61,7 +61,7 @@ $(function(){
             uptoken_url: '<?=U('/member/upload/picToken')?>',
             domain: 'http://<?=$config->qiniu->picture->domain?>/',
             get_new_uptoken: false,
-            downtoken_url: '<?=U('/member/info/editheadlogo')?>',
+            downtoken_url: '<?=U('/member/upload/editheadlogo')?>',
             unique_names: true,
             multi_selection:false,
             auto_start: true,

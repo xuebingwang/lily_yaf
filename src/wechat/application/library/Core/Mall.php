@@ -20,7 +20,6 @@ class Mall extends Controller_Abstract {
         $this->config = Registry::get('config');
 
         $this->user = session('user_auth');
-
         $config_setting = M('t_wechat_setting')->get('*',['id'=>1]);
         $this->wechat = new \Wechat($config_setting);
         if(!is_not_wx() && empty($this->user)){
@@ -129,11 +128,6 @@ class Mall extends Controller_Abstract {
             session('alert_msg',$alert_msg);
         }
         parent::redirect($url);
-        die;
-    }
-
-    public function display($action){
-        parent::display($action);
         die;
     }
 

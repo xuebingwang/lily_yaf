@@ -1,5 +1,5 @@
 <div class="center"><img src="/images/p1.jpg" class="img"></div>
-<div class="wrap">
+<div class="wrap padb90">
     <?php
     if(empty($list)):
     ?>
@@ -16,4 +16,5 @@
     endif;
     ?>
 </div>
+<?php require_once APP_PATH.'views/common/teacher.nav.php'?>
 <?php require_once APP_PATH.'views/plan/script.php'?>

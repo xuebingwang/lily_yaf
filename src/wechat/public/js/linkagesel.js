@@ -4,21 +4,21 @@ XBW.linkage = {
     data : '',
     init : function(options){
         var defaults = {
-                            root        : 0,          //从哪个开始
-                            emptyText   : '请选择',     //选择框的提示
-                            selected    : '',         //默认选中的值
-                            district    : 'district', //input隐藏域的name
-                            district_id : 'district', //input隐藏域的id
-                            sel_wrap    : '<span></span>', //下拉菜单的包围
-                            change_callback    : function(sel,sel_html){
-                                sel.parent().nextAll().remove();
-                                if(sel_html == null){
-                                    return false;
-                                }
-                                sel.parent().after($(options.sel_wrap).html(sel_html));
-                            }, //下拉菜单的包围
-                            menu_id     : 'sel_'      //下拉菜单ID
-                       };
+            root        : 0,          //从哪个开始
+            emptyText   : '请选择',     //选择框的提示
+            selected    : '',         //默认选中的值
+            district    : 'district', //input隐藏域的name
+            district_id : 'district', //input隐藏域的id
+            sel_wrap    : '<span></span>', //下拉菜单的包围
+            change_callback    : function(sel,sel_html){
+                sel.parent().nextAll().remove();
+                if(sel_html == null){
+                    return false;
+                }
+                sel.parent().after($(options.sel_wrap).html(sel_html));
+            }, //下拉菜单的包围
+            menu_id     : 'sel_'      //下拉菜单ID
+        };
         var options = $.extend(defaults, options);
         options.district_id = options.district_id || options.district;
 
@@ -52,7 +52,7 @@ XBW.linkage = {
             $.each(_self.data[root],function(i,v){
                 sel_html += '<option value="'+i+'">'+v+'</option>';
             });
-            
+
             sel_html    += '</select>';
 
             if(flag){
@@ -78,11 +78,11 @@ XBW.linkage = {
                 $('#'+id).val(parents[root]).change();
             }
         };
-        
+
         //设置json数据
         if(typeof(this.data) == "string"){
             $.getJSON(this.data,$.proxy(function(json){
-                
+
                 this.data = json;
                 this.buildSelect(this.getParentsKey(options.selected));
             }, this));
@@ -91,7 +91,7 @@ XBW.linkage = {
         };
 
     },
-    
+
     //根据k找到值
     findVbyK : function(k){
         if(this.data == ''){
@@ -112,10 +112,10 @@ XBW.linkage = {
     getParentsKey : function(selected){
         var keys = [];
         if(selected > 0){
-            
+
             var tmp = this.findVbyK(selected);
             keys[tmp[0]] = tmp[2];
-            
+
             while(tmp[0] > 0){
                 tmp = this.findVbyK(tmp[0]);
                 keys[tmp[0]] = tmp[2];
@@ -127,10 +127,10 @@ XBW.linkage = {
     getParentsText : function(selected){
         var text = [];
         if(selected != ''){
-            
+
             var tmp = this.findVbyK(selected);
             text.push(tmp[1]);
-            
+
             while(tmp[0] > 0){
                 tmp = this.findVbyK(tmp[0]);
                 text.push(tmp[1]);

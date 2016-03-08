@@ -11,6 +11,27 @@ Yaf\Loader::import(APP_PATH.'helper'.DS.'qiniu.php');
 */
 class UploadController extends Mall {
 
+    /**
+     * 修改头像
+     */
+    public function editHeadLogoAction(){
+
+        if(empty($this->user['user_id'])){
+            $this->error('参数错误，用户ID为空！');
+        }
+
+        $this->user['head_logo']= I('source');
+        if(empty($this->user['head_logo'])){
+            $this->error('头像修改失败，地址为空！');
+        }
+        if(M('t_user')->update(['headimgurl'=>$this->user['head_logo']],['id'=>$this->user['user_id']])){
+
+            session('user_auth',$this->user);
+            $this->success('修改成功！',imageView2($this->user['head_logo'],100,100));
+        }else{
+            $this->error('头像保存失败，请重新再试或联系客服人员！');
+        }
+    }
 
     public function downFileTokenAction(){
         // 对链接进行签名
