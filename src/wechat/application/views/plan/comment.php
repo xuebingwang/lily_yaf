@@ -123,8 +123,6 @@ $(function(){
                     parent.next().remove();
                 },
                 'FileUploaded': function(up, file, info) {
-                    console.info(file);
-                    console.info(info);
                     $.post(up.settings.downtoken_url,{
                         url:Qiniu.imageView2({mode:1,w:30,h:30},info.key)
                     },function(resp){

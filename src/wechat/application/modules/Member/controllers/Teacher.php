@@ -17,6 +17,59 @@ class TeacherController extends Mall {
         $this->assign('user',$this->user);
     }
 
+    public function albumAction(){
+        $model = new UserAlbumModel();
+        $model->user_id = $this->user['user_id'];
+
+        if(IS_POST){
+
+            $pic_url = I('pic_url',[]);
+            if(empty($pic_url)){
+                $this->error('请至少上传一张照片！');
+            }
+
+            $is_cover = I('is_cover');
+            $is_cover = empty($is_cover) ? $pic_url[0] : $is_cover;
+            $datas = [];
+
+            $flag = false;
+            foreach($pic_url as $key=>$pic){
+                $tmp = [
+                    'user_id'=>$this->user['user_id'],
+                    'pic_url'=>$pic,
+                    'sort'=>$key,
+                    'is_cover'=>($pic == $is_cover ? UserAlbumModel::BOOL_YES : UserAlbumModel::BOOL_NO),
+                    'insert_time'=>time_format(),
+                ];
+                if($tmp['is_cover'] == UserAlbumModel::BOOL_YES){
+                    $flag = true;
+                }
+                $datas[] = $tmp;
+            }
+
+            if(!$flag){
+                $datas[0]['is_cover'] = UserAlbumModel::BOOL_YES;
+            }
+            if($model->save($datas)){
+                $this->success('保存成功！',U('/member/teacher/index'));
+            }else{
+                $this->error('保存失败，请重新再试或联系客服人员！');
+            }
+        }
+
+        $list = [];
+        foreach($model->getList() as $item){
+            $list[] = [
+                'source'=>$item['pic_url'],
+                'url'=>imageView2($item['pic_url'],30,30),
+                'is_cover'=>$item['is_cover'] == UserAlbumModel::BOOL_YES ? true : false,
+            ];
+        }
+        $this->assign('list',$list);
+        $this->layout->title = '我的相册';
+
+    }
+
     public function editAction(){
         if(IS_POST){
             $data = [];
