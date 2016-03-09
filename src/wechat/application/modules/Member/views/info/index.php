@@ -12,6 +12,26 @@
 <div class="wrap">
     <div class="box list1">
         <ul>
+            <?php if(isset($is_teacher) && $is_teacher):?>
+            <li>
+                <a href="<?=U('/member/teacher/edit')?>">
+                    <div class="cell"><i class="ico i-info"></i> 我的资料</div>
+                    <div class="cell arr-right"><i class=" ico i-right"></i></div>
+                </a>
+            </li>
+            <li>
+                <a href="<?=U('/member/teacher/album')?>">
+                    <div class="cell"><i class="ico i-folder"></i> 我的相册</div>
+                    <div class="cell arr-right"><i class=" ico i-right"></i></div>
+                </a>
+            </li>
+            <li>
+                <a href="<?=U('/member/course/index')?>">
+                    <div class="cell"><i class="ico i-folder"></i> 我的课件</div>
+                    <div class="cell arr-right"><i class=" ico i-right"></i></div>
+                </a>
+            </li>
+            <?php else:?>
             <li>
                 <a href="<?=U('/member/info/edit')?>">
                     <div class="cell"><i class="ico i-info"></i> 我的资料</div>
@@ -21,10 +41,11 @@
 
             <li>
                 <a href="<?=U('/member/plan/index')?>">
-                    <div class="cell"><i class="ico i-files"></i> 我的课件</div>
+                    <div class="cell"><i class="ico i-files"></i> 我的商业计划书</div>
                     <div class="cell arr-right"><i class=" ico i-right"></i></div>
                 </a>
             </li>
+            <?php endif;?>
         </ul>
     </div>
 </div>

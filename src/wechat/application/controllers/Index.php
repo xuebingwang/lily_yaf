@@ -49,5 +49,7 @@ class IndexController extends Mall {
             }
             $this->success('ok','',['html'=>$this->render('../plan/ajax.list')]);
         }
+
+        $this->assign('active_menu','index_teacher');
     }
 }
