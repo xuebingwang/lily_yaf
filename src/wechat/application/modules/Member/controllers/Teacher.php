@@ -73,6 +73,8 @@ class TeacherController extends Mall {
     public function indexAction(){
 
         $this->layout->title = '我的';
-        $this->display('../info/index');
+        $this->assign('is_teacher',true);
+        $this->getResponse()->setBody($this->render('../info/index'));
+        return false;
     }
 }

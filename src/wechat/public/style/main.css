@@ -4,7 +4,7 @@ body{font-family:  "Microsoft YaHei", Arial, Helvetica, sans-serif;background: #
 .padt8{padding-top: .8rem;}
 /*index*/
 .header{background: #f9f9f9;position: relative;z-index: 2;position: fixed;left: 0;top:0;width: 100%;}
-.ico{background: url(../images/ico.png);background-size: 1rem auto;display: inline-block;vertical-align: middle;}
+.ico{background: url(../images/ico.png);background-size: 1.3rem auto;display: inline-block;vertical-align: middle;}
 .i-back{background-position: 0 0;width:.18rem;height: .31rem; }
 .header .back{position: absolute;left: 0;top:0;padding:.25rem;: }
 .header .txt{text-align: center;color: #252525;font-size: .29rem;line-height: .8rem;}
@@ -61,7 +61,8 @@ body{font-family:  "Microsoft YaHei", Arial, Helvetica, sans-serif;background: #
 .rewlist ul li .arr-right{vertical-align: top;}
 
 .i-info{width: .32rem;height: .32rem;background-position: 0 -.32rem;}
-.i-files{width: .32rem;height: .32rem;background-position: -.4rem -.32rem;}
+.i-folder{width: .32rem;height: .32rem;background-position: -.4rem -.32rem;}
+.i-files{width: .30rem;height: .36rem;background-position: -.88rem -.32rem;}
 .i-right{width: .14rem;height: .27rem;background-position: -.3rem 0;}
 .i-add{width: .42rem;height: .42rem;background-position: 0 -.7rem;display: inline-block;}
 
