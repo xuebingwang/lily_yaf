@@ -25,13 +25,13 @@
 <?php endif;?>
 </block>
 
-    <?php echo $content?>
+<?php echo $content?>
 
 </article>
 
 <script type="text/javascript" src="/js/framwork.js"></script>
 <script type="text/javascript" src="/js/noclickdelay.js"></script>
-<script type="text/javascript" src="/js/layer/layer.mobile.js"></script>
+<script type="text/javascript" src="http://7xrote.com2.z0.glb.qiniucdn.com/layer.mobile.js"></script>
 <script type="text/javascript" src="/js/common.js?<?=md5_file('js/common.js')?>"></script>
 <block name="script">
 

@@ -86,7 +86,7 @@
     });
 </script>
 
-<script src="/js/linkagesel.js"></script>
+<script src="http://7xrote.com2.z0.glb.qiniucdn.com/linkagesel.js"></script>
 <?php require_once __DIR__.'/../common/upload.js.php';?>
 <?php require_once __DIR__.'/../common/upload.pic.php';?>
 <?php require_once __DIR__.'/../common/upload.file.php';?>
