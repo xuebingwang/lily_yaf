@@ -53,7 +53,6 @@
                         </td>
                         <td>
                             <a href="{:U('Wxuser/edit?id='.$vo['wx_id'])}">详情</a>
-                            
                         </td>
 					</tr>
 					</volist>
