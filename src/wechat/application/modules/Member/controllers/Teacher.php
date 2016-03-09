@@ -13,24 +13,20 @@ class TeacherController extends Mall {
         if($this->user['is_teacher'] != UserModel::BOOL_YES){
             $this->error('您需要先通过名师认证才能点评！',U('/public/regTeacher'),['btn_text'=>'去认证']);
         }
+
         $this->assign('user',$this->user);
     }
 
-
     public function editAction(){
-
         if(IS_POST){
             $data = [];
-            $data['company'] = I('company');
-            if(empty($data['company'])){
-                $this->error('公请输入司名称！');
+            $data['name'] = I('name');
+            if(empty($data['name'])){
+                $this->error('请输入姓名！');
             }
-            if(length_regex($data['company'],20)){
-                $this->error('公司名称最大允许输入20个字符！');
+            if(length_regex($data['name'],20)){
+                $this->error('姓名最大允许输入20个字符！');
             }
-
-            $data['company_industry'] = intval(I('company_industry'));
-            $data['company_scale'] = intval(I('company_scale'));
 
             $data['mobile'] = I('mobile');
             if(empty($data['mobile'])){
@@ -40,14 +36,30 @@ class TeacherController extends Mall {
                 $this->error('请输入正确的手机号码！');
             }
 
-            $data['name'] = I('name');
-            if(empty($data['name'])){
-                $this->error('请输入姓名！');
+            $data['good_at'] = I('good_at');
+            if(empty($data['good_at'])){
+                $this->error('请输入擅长内容！');
             }
-            if(length_regex($data['name'],20)){
-                $this->error('姓名最大允许输入20个字符！');
+            if(length_regex($data['good_at'],50)){
+                $this->error('擅长最大允许输入50个字符！');
             }
+
+            $data['qr_code_url'] = I('qr_code_url');
+            if(empty($data['qr_code_url'])){
+                $this->error('请上传二维码！');
+            }
+
+
+            $data['description'] = I('description');
+            if(empty($data['description'])){
+                $this->error('请输入个人简介！');
+            }
+            if(length_regex($data['good_at'],500)){
+                $this->error('个人简介最大允许输入50个字符！');
+            }
+
             $data['update_time'] = time_format();
+
             if(M('t_user')->update($data,['id'=>$this->user['user_id']])){
                 $this->success('保存成功！');
             }else{
@@ -55,14 +67,7 @@ class TeacherController extends Mall {
             }
         }
         $item = M('t_user')->get('*',['id'=>$this->user['user_id']]);
-
         $this->assign('item',$item);
-
-        $cate_list = [];
-        foreach(M('t_category')->select(['id','pid','title'],['status'=>1]) as $item){
-            $cate_list[$item['pid']][$item['id']] = $item['title'];
-        }
-        $this->assign('cate_list',$cate_list);
 
         $this->layout->title = '我的资料';
     }
@@ -71,7 +76,6 @@ class TeacherController extends Mall {
      *
      */
     public function indexAction(){
-
         $this->layout->title = '我的';
         $this->assign('is_teacher',true);
         $this->getResponse()->setBody($this->render('../info/index'));
