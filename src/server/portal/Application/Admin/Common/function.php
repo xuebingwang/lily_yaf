@@ -677,3 +677,32 @@ function get_action_type($type, $all = false){
 function check_resp($resp){
     return !empty($resp) && $resp['errcode'] == '0';
 }
+
+/**
+* 获取性别
+*
+*/
+
+function get_sex ($sex) {
+    if($sex == 1) {
+        return '男';
+    }else if($sex == 2) {
+        return '女';
+    } else {
+        return '未知';
+    }
+ }
+
+ /**
+* 获取关注标示
+*
+*/
+function get_subscribe ($subscribe) {
+    if($subscribe == -1) {
+        return '从未关注过';
+    }else if($subscribe == 0) {
+        return '未关注';
+    } else {
+        return '已关注';
+    }
+ }
