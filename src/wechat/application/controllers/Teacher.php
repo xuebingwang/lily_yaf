@@ -15,7 +15,8 @@ class TeacherController extends Core\Mall {
     public function indexAction() {
         $where = [
           'AND' => [
-              'a.status' => 'OK#',
+              'a.status' => TeacherModel::STATUS_OK,
+              'a.apply_status' => TeacherModel::APPLY_STATUS_YES
           ]
         ];
 
@@ -46,16 +47,13 @@ class TeacherController extends Core\Mall {
     }
 
     public function detailAction($id) {
-        //封面
-        $album = M('t_teacher(a)')->select(
-            [
-                '[>]t_user(b)' => ['a.user_id' => 'id'],
-                '[>]t_user_album(c)' => ['a.user_id' => 'user_id']
-            ],
-            [
-                'c.*',
-            ],
-            ['a.id'=>$id]);
+        $where = [
+            'AND' => [
+                'a.status' => TeacherModel::STATUS_OK,
+                'a.apply_status' => TeacherModel::APPLY_STATUS_YES,
+                'a.id'=>$id
+            ]
+        ];
 
         //个人信息
         $teacher = M('t_teacher(a)')->get(
@@ -66,7 +64,24 @@ class TeacherController extends Core\Mall {
                 'b.name',
                 'a.*',
             ],
-            ['a.id'=>$id]);
+            $where
+        );
+
+        if(empty($teacher)) {
+            $this->error('该名师不存在');
+        }
+
+        //封面
+        $album = M('t_teacher(a)')->select(
+            [
+                '[>]t_user(b)' => ['a.user_id' => 'id'],
+                '[>]t_user_album(c)' => ['a.user_id' => 'user_id']
+            ],
+            [
+                'c.*',
+            ],
+            $where
+        );
         $this->assign('album', $album);
         $this->assign('teacher', $teacher);
         $this->layout->title="名师详情";
