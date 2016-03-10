@@ -8,6 +8,9 @@ use Core\Mall;
 */
 class PlanController extends Mall {
 
+    /**
+     * 保存评论
+     */
     private function _save_comment(){
 
         $data['plan_id'] = I('id');
@@ -52,11 +55,37 @@ class PlanController extends Mall {
         $this->error('评论保存失败，请重新再试或联系客服人员！');
     }
 
-    public function commentAction(){
+    private function _check_user(){
 
-        if($this->user['is_teacher'] != UserModel::BOOL_YES){
-            $this->error('您需要先通过名师认证才能点评！',U('/public/regTeacher'),['btn_text'=>'去认证']);
+        if(empty($this->user['user_id'])){
+            $this->error('您还没有做过认证或报道！');
         }
+
+        if(!empty($this->user['teacher_id'])){
+
+            if($this->user['apply_status'] == TeacherModel::APPLY_STATUS_WAT){
+                $this->error('您的资料正在审核中，请等待两至三个工作日！');
+            }
+
+            if($this->user['apply_status'] != TeacherModel::APPLY_STATUS_YES){
+                $this->error('您需要先通过名师认证才能点评！',U('/public/regTeacher'),['btn_text'=>'去认证']);
+            }
+
+            if($this->user['teacher_status'] != TeacherModel::STATUS_OK){
+                $this->error('您的名师状态不正常！');
+            }
+        }
+
+        if(!empty($this->user['student_id']) && $this->user['student_status'] != StudentModel::STATUS_OK){
+            $this->error('您的学生状态不正常！');
+        }
+    }
+    /**
+     *点评计划书
+     */
+    public function commentAction(){
+        $this->_check_user();
+
         $id = intval(I('id'));
         if(empty($id)){
             $this->error('参数错误，计划书ID为空！');
@@ -139,6 +168,7 @@ class PlanController extends Mall {
      * 点赞计划书
      */
     public function likeAction(){
+
         $id = intval(I('id',0));
         if(empty($id)){
             $this->error('参数错误，计划书ID不能为空！');
@@ -171,9 +201,8 @@ class PlanController extends Mall {
      * 下载计划书附件
      */
     public function downFileAction(){
-        if($this->user['is_student'] == UserModel::BOOL_NO && $this->user['is_teacher'] == UserModel::BOOL_NO){
-            $this->error('下载计划书需要新人报道或名师认证！');
-        }
+
+        $this->_check_user();
 
         $id = intval(I('id',0));
         if(empty($id)){

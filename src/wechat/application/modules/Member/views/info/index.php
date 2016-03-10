@@ -5,7 +5,7 @@
         </div>
     </label>
     <div class="name"><?=$user['name']?></div>
-    <div class="com"><?=$user['company']?></div>
+    <div class="com"></div>
     <p class="tips">注：直接点击头像换头像</p>
 </div>
 

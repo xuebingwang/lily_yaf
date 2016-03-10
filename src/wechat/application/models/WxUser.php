@@ -51,14 +51,17 @@ class WxUserModel extends Model{
             'b.name',
             'b.headimgurl(head_logo)',
             'b.mobile',
-            'b.company',
-            'b.is_student',
-            'b.is_teacher',
-            'b.teacher_apply_status',
+            'c.id(student_id)',
+            'c.status(student_status)',
+            'd.id(teacher_id)',
+            'd.status(teacher_status)',
+            'd.apply_status',
         ];
         return $this->get(
             [
                 '[>]t_user(b)'=>['wx_id'=>'wx_id','AND'=>['b.status'=>UserModel::STATUS_OK]],
+                '[>]t_student(c)'=>['b.id'=>'user_id'],
+                '[>]t_teacher(d)'=>['b.id'=>'user_id'],
             ],
             $field,
             ['AND'=>['openid'=>$openid]]

@@ -16,6 +16,16 @@ class Model
     public $table;
     
     private static $instance;
+
+    /**
+     * 是
+     */
+    const BOOL_YES = 'YES';
+
+    /**
+     * 不是
+     */
+    const BOOL_NO = 'NO#';
     
     /**
      * 构造函数

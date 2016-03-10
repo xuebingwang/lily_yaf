@@ -10,16 +10,26 @@ class TeacherController extends Mall {
 
     public function init(){
         parent::init();
-        if($this->user['is_teacher'] != UserModel::BOOL_YES){
+
+        if($this->user['apply_status'] == TeacherModel::APPLY_STATUS_WAT){
+            $this->error('您的资料正在审核中，请等待两至三个工作日！');
+        }
+        if(empty($this->user['teacher_id']) || $this->user['apply_status'] != TeacherModel::APPLY_STATUS_YES){
             $this->error('您需要先通过名师认证才能点评！',U('/public/regTeacher'),['btn_text'=>'去认证']);
+        }
+        if($this->user['teacher_status'] != TeacherModel::STATUS_OK){
+            $this->error('对不起，您的状态不正常！');
         }
 
         $this->assign('user',$this->user);
     }
 
+    /**
+     * 相册，老师
+     */
     public function albumAction(){
         $model = new UserAlbumModel();
-        $model->user_id = $this->user['user_id'];
+        $model->setUserId($this->user['user_id']);
 
         if(IS_POST){
 
@@ -38,17 +48,17 @@ class TeacherController extends Mall {
                     'user_id'=>$this->user['user_id'],
                     'pic_url'=>$pic,
                     'sort'=>$key,
-                    'is_cover'=>($pic == $is_cover ? UserAlbumModel::BOOL_YES : UserAlbumModel::BOOL_NO),
+                    'is_cover'=>($pic == $is_cover ? Model::BOOL_YES : Model::BOOL_NO),
                     'insert_time'=>time_format(),
                 ];
-                if($tmp['is_cover'] == UserAlbumModel::BOOL_YES){
+                if($tmp['is_cover'] == Model::BOOL_YES){
                     $flag = true;
                 }
                 $datas[] = $tmp;
             }
 
             if(!$flag){
-                $datas[0]['is_cover'] = UserAlbumModel::BOOL_YES;
+                $datas[0]['is_cover'] = Model::BOOL_YES;
             }
             if($model->save($datas)){
                 $this->success('保存成功！',U('/member/teacher/index'));
@@ -62,7 +72,7 @@ class TeacherController extends Mall {
             $list[] = [
                 'source'=>$item['pic_url'],
                 'url'=>imageView2($item['pic_url'],30,30),
-                'is_cover'=>$item['is_cover'] == UserAlbumModel::BOOL_YES ? true : false,
+                'is_cover'=>$item['is_cover'] == Model::BOOL_YES ? true : false,
             ];
         }
         $this->assign('list',$list);
@@ -70,9 +80,14 @@ class TeacherController extends Mall {
 
     }
 
+    /**
+     * 修改个人信息，老师
+     */
     public function editAction(){
+        $teacher_model = new TeacherModel();
+        $teacher_model->setId($this->user['teacher_id']);
+
         if(IS_POST){
-            $data = [];
             $data['name'] = I('name');
             if(empty($data['name'])){
                 $this->error('请输入姓名！');
@@ -89,44 +104,47 @@ class TeacherController extends Mall {
                 $this->error('请输入正确的手机号码！');
             }
 
-            $data['good_at'] = I('good_at');
-            if(empty($data['good_at'])){
+            $teacher_data['good_at'] = I('good_at');
+            if(empty($teacher_data['good_at'])){
                 $this->error('请输入擅长内容！');
             }
-            if(length_regex($data['good_at'],50)){
+            if(length_regex($teacher_data['good_at'],50)){
                 $this->error('擅长最大允许输入50个字符！');
             }
 
-            $data['qr_code_url'] = I('qr_code_url');
-            if(empty($data['qr_code_url'])){
+            $teacher_data['qr_code_url'] = I('qr_code_url');
+            if(empty($teacher_data['qr_code_url'])){
                 $this->error('请上传二维码！');
             }
 
-
-            $data['description'] = I('description');
-            if(empty($data['description'])){
+            $teacher_data['description'] = I('description');
+            if(empty($teacher_data['description'])){
                 $this->error('请输入个人简介！');
             }
-            if(length_regex($data['good_at'],500)){
+            if(length_regex($teacher_data['good_at'],500)){
                 $this->error('个人简介最大允许输入50个字符！');
             }
 
-            $data['update_time'] = time_format();
+            $user_model = new UserModel();
+            if($user_model->update($data,['id'=>$this->user['user_id']]) && $teacher_model->update($teacher_data)){
+                $this->user['name'] = $data['name'];
+                $this->user['mobile'] = $data['mobile'];
+                session('user_auth',$this->user);
 
-            if(M('t_user')->update($data,['id'=>$this->user['user_id']])){
                 $this->success('保存成功！');
             }else{
                 $this->error('保存失败，请重新再试或联系客服人员！');
             }
         }
-        $item = M('t_user')->get('*',['id'=>$this->user['user_id']]);
+
+        $item = $teacher_model->getItem();
         $this->assign('item',$item);
 
         $this->layout->title = '我的资料';
     }
 
     /**
-     *
+     * 我的-老师端
      */
     public function indexAction(){
         $this->layout->title = '我的';

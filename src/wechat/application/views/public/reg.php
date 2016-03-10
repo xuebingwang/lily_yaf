@@ -6,7 +6,7 @@
             <li>
                 <div class="lab cell">公司名称：</div>
                 <div class="cell">
-                    <input id="company" name="company" type="text" class="inpt2" placeholder="" value="<?=$user['company']?>">
+                    <input id="company" name="company" type="text" class="inpt2" placeholder="" value="">
                 </div>
             </li>
             <li>

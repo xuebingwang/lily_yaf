@@ -12,17 +12,25 @@ class UserAlbumModel extends Model{
     public $table = 't_user_album';
 
     /**
-     * 是
+     * 用户ID
+     * @var
      */
-    const BOOL_YES = 'YES';
+    protected $user_id;
 
     /**
-     * 不是
+     * @param $user_id
+     * @return $this
      */
-    const BOOL_NO = 'NO#';
+    public function setUserId($user_id){
 
-    public $user_id;
+        $this->user_id = $user_id;
+        return $this;
+    }
 
+    /**
+     * @param $data
+     * @return array
+     */
     public function save($data){
 
         $this->delete(['user_id'=>$this->user_id]);
@@ -36,6 +44,9 @@ class UserAlbumModel extends Model{
 //        $this->getPDO()->rollback();
     }
 
+    /**
+     * @return bool
+     */
     public function getList(){
 
         return $this->select('*',['user_id'=>$this->user_id]);

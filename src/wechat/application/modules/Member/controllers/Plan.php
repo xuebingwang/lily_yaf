@@ -10,11 +10,17 @@ class PlanController extends Mall {
 
     public function init(){
         parent::init();
-        if($this->user['is_student'] != UserModel::BOOL_YES){
+        if(empty($this->user['student_id'])){
             $this->error('请您先做新人报道！');
+        }
+        if($this->user['student_status'] != StudentModel::STATUS_OK){
+            $this->error('对不起，您的状态不正常！');
         }
     }
 
+    /**
+     * 我的计划书列表
+     */
     public function indexAction(){
         $where = [
             'AND'=>[
@@ -54,8 +60,9 @@ class PlanController extends Mall {
 
         $this->layout->title = '我的商业计划书';
     }
+
     /**
-     *
+     *添加计划书
      */
     public function addAction(){
         if(IS_POST){

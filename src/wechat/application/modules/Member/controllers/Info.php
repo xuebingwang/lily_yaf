@@ -10,27 +10,34 @@ class InfoController extends Mall {
 
     public function init(){
         parent::init();
-        if($this->user['is_student'] != UserModel::BOOL_YES){
+        if(empty($this->user['student_id'])){
             $this->error('请您先做新人报道！');
         }
+        if($this->user['student_status'] != StudentModel::STATUS_OK){
+            $this->error('对不起，您的状态不正常！');
+        }
+
         $this->assign('user',$this->user);
     }
 
-
+    /**
+     * 修改个人信息，学生
+     */
     public function editAction(){
 
+        $model = new StudentModel();
+
         if(IS_POST){
-            $data = [];
-            $data['company'] = I('company');
-            if(empty($data['company'])){
+            $student_data['company'] = I('company');
+            if(empty($student_data['company'])){
                 $this->error('公请输入司名称！');
             }
-            if(length_regex($data['company'],20)){
+            if(length_regex($student_data['company'],20)){
                 $this->error('公司名称最大允许输入20个字符！');
             }
 
-            $data['company_industry'] = intval(I('company_industry'));
-            $data['company_scale'] = intval(I('company_scale'));
+            $student_data['company_industry'] = intval(I('company_industry'));
+            $student_data['company_scale'] = intval(I('company_scale'));
 
             $data['mobile'] = I('mobile');
             if(empty($data['mobile'])){
@@ -47,14 +54,20 @@ class InfoController extends Mall {
             if(length_regex($data['name'],20)){
                 $this->error('姓名最大允许输入20个字符！');
             }
-            $data['update_time'] = time_format();
-            if(M('t_user')->update($data,['id'=>$this->user['user_id']])){
+
+            $user_model = new UserModel();
+            if($user_model->update($data,['id'=>$this->user['user_id']]) && $model->setId($this->user['student_id'])->update($student_data)){
+                $this->user['name'] = $data['name'];
+                $this->user['mobile'] = $data['mobile'];
+                session('user_auth',$this->user);
+
                 $this->success('保存成功！');
             }else{
                 $this->error('保存失败，请重新再试或联系客服人员！');
             }
         }
-        $item = M('t_user')->get('*',['id'=>$this->user['user_id']]);
+
+        $item = $model->setId($this->user['wx_id'])->getItem();
 
         $this->assign('item',$item);
 
@@ -68,26 +81,7 @@ class InfoController extends Mall {
     }
 
     /**
-     * 修改头像
-     */
-    public function editHeadLogoAction(){
-
-        $this->user['head_logo']= I('source');
-        if(empty($this->user['head_logo'])){
-            $this->error('头像修改失败，地址为空！');
-        }
-        if(M('t_user')->update(['headimgurl'=>$this->user['head_logo']],['id'=>$this->user['user_id']])){
-
-            session('user_auth',$this->user);
-            $this->success('修改成功！',imageView2($this->user['head_logo'],100,100));
-        }else{
-            $this->error('头像保存失败，请重新再试或联系客服人员！');
-        }
-
-    }
-
-    /**
-     *
+     * 我的-学生端
      */
     public function indexAction(){
 
