@@ -1,6 +1,6 @@
 <header class="header">
     <a href="javascript:back(); " class="back"><i class="ico i-back"></i></a>
-    <div class="txt">名师推荐</div>
+    <div class="txt">名师课件</div>
     <a href="javascript:;" class="search"><i class="ico i-search"></i></a>
 </header>
 <div class="wrap" id="item-wrap">
@@ -16,7 +16,7 @@
         </div>
         <?php
     else:
-        require_once('ajax.list.php');
+        require_once('course.ajax.list.php');
     endif;
     ?>
     <input type="hidden" id="page" value="<?=$page?>" />

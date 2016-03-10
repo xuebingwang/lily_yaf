@@ -6,14 +6,12 @@ $(window).scroll(function(){
         if(surplus.val() == 0 || is_loading){
             return false;
         }
-
         var page = $('#page').val();
         is_loading = true;
         $.get(
             window.location,
             {page:page,random:Math.random()},
             function(resp){
-
                 if(resp.status == '0'){
                     surplus.val(parseInt(surplus.val())-resp.list_total);
                     $("#item-wrap").append(resp.html);
