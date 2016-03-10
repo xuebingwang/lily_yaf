@@ -64,7 +64,7 @@ class PlanController extends Mall {
         if(!empty($this->user['teacher_id'])){
 
             if($this->user['apply_status'] == TeacherModel::APPLY_STATUS_WAT){
-                $this->error('您的资料正在审核中，请等待两至三个工作日！');
+                $this->error('您的资料正在审核中，审核通过后才能点评！');
             }
 
             if($this->user['apply_status'] != TeacherModel::APPLY_STATUS_YES){
@@ -85,6 +85,10 @@ class PlanController extends Mall {
      */
     public function commentAction(){
         $this->_check_user();
+
+        if(empty($this->use['teacher_id'])){
+            $this->error('您需要先通过名师认证才能点评！',U('/public/regTeacher'),['btn_text'=>'去认证']);
+        }
 
         $id = intval(I('id'));
         if(empty($id)){
@@ -127,8 +131,9 @@ class PlanController extends Mall {
             [
                 '[>]t_business_plan_count(b)'=>['a.id'=>'plan_id','AND'=>['b.wx_id'=>$this->user['wx_id'],'b.type'=>1]],
                 '[><]t_user(c)'=>['a.student_id'=>'id'],
+                '[><]t_student(d)'=>['c.id'=>'user_id'],
             ],
-            ['a.*','b.wx_id','c.name(student_name)','c.company'],
+            ['a.*','b.wx_id','c.name(student_name)','d.company'],
             ['a.id'=>$id]
         );
 
