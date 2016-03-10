@@ -24,7 +24,7 @@ class PlanController extends Mall {
     public function indexAction(){
         $where = [
             'AND'=>[
-                'a.status'=>1,
+                'a.status'=>BusinessPlanModel::STATUS_OK,
                 'student_id'=>$this->user['user_id']
                 ]
         ];
@@ -35,18 +35,8 @@ class PlanController extends Mall {
         $where['LIMIT'] = [$page*$this->config->application->pagenum,$this->config->application->pagenum];
         $where['ORDER'] = $order_by;
 
-        $list = M('t_business_plan(a)')->select(
-            [
-                '[><]t_category(b)'=>['a.category'=>'id'],
-                '[>]t_business_plan_count(d)'=>['a.id'=>'plan_id','AND'=>['d.wx_id'=>$this->user['wx_id'],'d.type'=>1]],
-            ],
-            [
-                'a.*',
-                'b.title(category_name)',
-                'd.wx_id',
-            ],
-            $where
-        );
+        $model = new BusinessPlanModel();
+        $list = $model->getList($where);
 
         $this->assign('list',$list);
 //        echo M()->last_query();
@@ -55,10 +45,17 @@ class PlanController extends Mall {
             if(empty($list)){
                 $this->error('没有更多数据了！');
             }
-            $this->success('ok','',['html'=>$this->render('ajax.list')]);
+            $this->success('ok','',[
+                    'html'=>$this->render('ajax.list'),
+                    'list_total'=>count($list),
+                    'page'=>$page+1
+                ]
+            );
         }
 
         $this->layout->title = '我的商业计划书';
+        $this->getView()->assign('total',intval($model->getListCount($where)));
+        $this->getView()->assign('page',$page+1);
     }
 
     /**
