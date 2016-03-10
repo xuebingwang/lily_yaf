@@ -27,39 +27,30 @@ class UserModel extends Model{
     const STATUS_DEL = 'DEL';
 
     /**
-     * 是
+     * @var主键ID
      */
-    const BOOL_YES = 'YES';
+    protected $id;
 
     /**
-     * 不是
+     * @param $id
+     * @return $this
      */
-    const BOOL_NO = 'NO#';
-
-    /**
-     * 名师认证状态:待审核
-     */
-    const TEACHER_APPLY_STATUS_WAT = 'WAT';
-
-    /**
-     * 名师认证状态:审核通过
-     */
-    const TEACHER_APPLY_STATUS_YES = 'YES';
-
-    /**
-     * 名师认证状态:审核拒绝
-     */
-    const TEACHER_APPLY_STATUS_NO = 'YES';
+    public function setId($id){
+        $this->id = $id;
+        return $this;
+    }
 
     /**
      * @param $data
      * @return array|bool
      */
     public function save($data){
+
         if(isset($data['id'])){
             $user_id = $data['id'];
             unset($data['id']);
-            if(!$this->update($data,['id'=>$user_id])){
+
+            if(!$this->setId($user_id)->update($data)){
                 return false;
             }
         }else{
@@ -73,7 +64,10 @@ class UserModel extends Model{
      * @param null|string $where
      * @return mixed
      */
-    public function update($data,$where){
+    public function update($data,$where=null){
+        if(empty($where)){
+            $where= ['id'=>$this->id];
+        }
 
         $data['update_time'] = time_format();
         return parent::update($data,$where);
@@ -87,5 +81,20 @@ class UserModel extends Model{
 
         $data['insert_time'] = time_format();
         return parent::insert($data);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getItem(){
+
+        return $this->get('*',
+            [
+                'AND'=>[
+                    'id'=>$this->id,
+                    'status'=>self::STATUS_OK,
+                ]
+            ]
+        );
     }
 }

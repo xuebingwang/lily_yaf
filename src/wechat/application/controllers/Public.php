@@ -16,7 +16,10 @@ class PublicController extends Mall {
      * 新人报道（学生）
      */
     public function regAction(){
-        if($this->user['is_student'] == UserModel::BOOL_YES){
+
+        $model              = new StudentModel();
+        if(!empty($this->user['student_id'])){
+
             $this->error('您已经报道过了！');
         }
 
@@ -54,15 +57,9 @@ class PublicController extends Mall {
                 $data['id']     = $this->user['user_id'];
             }
 
-            $data['is_student'] = UserModel::BOOL_YES;
-            $model              = new UserModel();
-            $this->user['user_id'] = $model->save($data);
-            if(!empty($this->user['user_id'])){
+            if($model->reg($data)){
                 $this->user['name'] = $data['name'];
                 $this->user['mobile'] = $data['mobile'];
-                $this->user['company'] = $data['company'];
-                $this->user['is_student'] = $data['is_student'];
-
                 session('user_auth',$this->user);
 
                 $this->success('报道成功！',U('/plan/index'));
@@ -78,19 +75,13 @@ class PublicController extends Mall {
      *  老师认证
      */
     public function regTeacherAction(){
-        $model = new UserModel();
-        $info = $model->get(
-            ['id(user_id)','name','mobile','teacher_apply_status','is_teacher'],
-            ['wx_id'=>$this->user['wx_id']]
-        );
 
-        if($info['is_teacher'] == UserModel::BOOL_YES){
-            session('user_auth',array_merge($this->user,$info));
-            $this->error('您已经通过认证了！',U('/index/teacher'));
+        if($this->user['apply_status'] == TeacherModel::APPLY_STATUS_WAT){
+            $this->error('您的资料正在审核中，请勿重复提交！');
         }
 
-        if($info['teacher_apply_status'] == UserModel::TEACHER_APPLY_STATUS_WAT){
-            $this->error('您的资料正在审核中，请勿重复提交！');
+        if(!empty($this->user['teacher_id']) && $this->user['teacher_status'] == TeacherModel::STATUS_OK){
+            $this->error('您已经通过认证了！',U('/index/teacher'));
         }
 
         if(IS_POST){
@@ -133,10 +124,14 @@ class PublicController extends Mall {
                 //修改
                 $data['id']     = $this->user['user_id'];
             }
-            $data['teacher_apply_status'] = UserModel::TEACHER_APPLY_STATUS_WAT;
-
-            $this->user['user_id'] = $model->save($data);
+            $model = new TeacherModel();
+            $this->user['user_id'] = $model->reg($data);
             if(!empty($this->user['user_id'])){
+
+                $this->user['name'] = $data['name'];
+                $this->user['mobile'] = $data['mobile'];
+                $this->user['apply_status'] = TeacherModel::APPLY_STATUS_WAT;
+                session('user_auth',$this->user);
 
                 $this->success('提交成功，我们会在1~3个工作日内回复！',U('/index/teacher'));
             }else{
