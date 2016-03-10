@@ -26,4 +26,5 @@
         });
     });
 </script>
+<script src="/js/scroll.page.js"></script>
 </block>

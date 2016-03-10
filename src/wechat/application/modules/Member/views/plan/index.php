@@ -1,4 +1,4 @@
-<div class="wrap padb80">
+<div class="wrap padb80" id="item-wrap">
     <?php
     if(empty($list)):
     ?>
@@ -14,6 +14,8 @@
         require_once('ajax.list.php');
     endif;
     ?>
+    <input type="hidden" id="page" value="<?=$page?>" />
+    <input type="hidden" id="surplus" value="<?=$total-count($list)?>" />
 </div>
 <footer class="footer">
     <a href="<?=U('/member/plan/add')?>" class="add-plan">

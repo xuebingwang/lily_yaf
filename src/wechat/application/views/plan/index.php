@@ -3,7 +3,7 @@
     <div class="txt">商业计划书展示</div>
     <a href="javascript:;" class="search"><i class="ico i-search"></i></a>
 </header>
-<div class="wrap">
+<div class="wrap" id="item-wrap">
     <?php
     if(empty($list)):
     ?>
@@ -19,6 +19,8 @@
         require_once('ajax.list.php');
     endif;
     ?>
+    <input type="hidden" id="page" value="<?=$page?>" />
+    <input type="hidden" id="surplus" value="<?=$total-count($list)?>" />
 </div>
 <div class="bgshadow"></div>
 <div class="searchbox">

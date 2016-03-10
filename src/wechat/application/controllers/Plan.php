@@ -64,7 +64,7 @@ class PlanController extends Mall {
         if(!empty($this->user['teacher_id'])){
 
             if($this->user['apply_status'] == TeacherModel::APPLY_STATUS_WAT){
-                $this->error('您的资料正在审核中，请等待两至三个工作日！');
+                $this->error('您的资料正在审核中，审核通过后才能点评！');
             }
 
             if($this->user['apply_status'] != TeacherModel::APPLY_STATUS_YES){
@@ -86,14 +86,18 @@ class PlanController extends Mall {
     public function commentAction(){
         $this->_check_user();
 
+        if(empty($this->user['teacher_id'])){
+            $this->error('您需要先通过名师认证才能点评！',U('/public/regTeacher'),['btn_text'=>'去认证']);
+        }
+
         $id = intval(I('id'));
         if(empty($id)){
             $this->error('参数错误，计划书ID为空！');
         }
 
-        $item = M('t_business_plan')->get(['id','title'],['id'=>$id]);
+        $item = M('t_business_plan')->get(['id','title'],['AND'=>['id'=>$id,'status'=>BusinessPlanModel::STATUS_OK]]);
         if(empty($item)){
-            $this->error('没有找到对应的计划书！');
+            $this->error('计划书不存在！');
         }
 
         if(IS_POST){
@@ -127,13 +131,14 @@ class PlanController extends Mall {
             [
                 '[>]t_business_plan_count(b)'=>['a.id'=>'plan_id','AND'=>['b.wx_id'=>$this->user['wx_id'],'b.type'=>1]],
                 '[><]t_user(c)'=>['a.student_id'=>'id'],
+                '[><]t_student(d)'=>['c.id'=>'user_id'],
             ],
-            ['a.*','b.wx_id','c.name(student_name)','c.company'],
-            ['a.id'=>$id]
+            ['a.*','b.wx_id','c.name(student_name)','d.company'],
+            ['AND'=>['a.id'=>$id,'a.status'=>BusinessPlanModel::STATUS_OK]]
         );
 
         if(empty($item)){
-            $this->error('没有找到指定的计划书！');
+            $this->error('计划书不存在！');
         }
 
         $this->assign('item',$item);
@@ -178,7 +183,7 @@ class PlanController extends Mall {
                 '[>]t_business_plan_count(b)'=>['a.id'=>'plan_id','AND'=>['b.wx_id'=>$this->user['wx_id'],'b.type'=>2]],
             ],
             ['a.like_count','b.wx_id'],
-            ['a.id'=>$id]
+            ['AND'=>['a.id'=>$id,'a.status'=>BusinessPlanModel::STATUS_OK]]
         );
         if(empty($item)){
             $this->error('没有找到计划书！');
@@ -208,7 +213,7 @@ class PlanController extends Mall {
         if(empty($id)){
             $this->error('参数错误，计划书ID不能为空！');
         }
-        $item = M('t_business_plan')->get(['file','down_count'],['id'=>$id]);
+        $item = M('t_business_plan')->get(['file','down_count'],['AND'=>['id'=>$id,'status'=>BusinessPlanModel::STATUS_OK]]);
 
         if(empty($item)){
             $this->error('没有找到计划书！');
@@ -224,7 +229,7 @@ class PlanController extends Mall {
      */
     public function indexAction(){
 
-        $where = ['AND'=>['a.status'=>1]];
+        $where = ['AND'=>['a.status'=>BusinessPlanModel::STATUS_OK]];
         $keyword = I('keyword');
         if(!empty($keyword)){
             $where['AND']['OR'] = [
@@ -251,21 +256,10 @@ class PlanController extends Mall {
         $where['LIMIT'] = [$page*$this->config->application->pagenum,$this->config->application->pagenum];
         $where['ORDER'] = $order_by;
 
-        $list = M('t_business_plan(a)')->select(
-            [
-                '[><]t_category(b)'=>['a.category'=>'id'],
-                '[><]t_user(c)'=>['a.student_id'=>'id'],
-                '[>]t_business_plan_count(d)'=>['a.id'=>'plan_id','AND'=>['d.wx_id'=>$this->user['wx_id'],'d.type'=>1]],
-            ],
-            [
-                'a.*',
-                'b.title(category_name)',
-                'c.name(student_name)',
-                'd.wx_id',
-            ],
-            $where
-        );
+        $model  = new BusinessPlanModel();
+        $list   = $model->getList($where);
 
+        SeasLog::debug($model->last_query());
         $this->assign('list',$list);
 //        echo M()->last_query();
 //        die;
@@ -273,7 +267,12 @@ class PlanController extends Mall {
             if(empty($list)){
                 $this->error('没有更多数据了！');
             }
-            $this->success('ok','',['html'=>$this->render('ajax.list')]);
+            $this->success('ok','',[
+                    'html'=>$this->render('ajax.list'),
+                    'list_total'=>count($list),
+                    'page'=>$page+1
+                ]
+            );
         }
 
         $cate_list = M('t_category(a)')->select(
@@ -289,6 +288,9 @@ class PlanController extends Mall {
             ]
         );
         $this->assign('cate_list',$cate_list);
+        $this->getView()->assign('total',intval($model->getListCount($where)));
+        $this->getView()->assign('page',$page+1);
+
         $this->layout->title = '商业计划书展示';
     }
 }
