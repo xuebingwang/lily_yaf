@@ -110,4 +110,41 @@ class PlanController extends Mall {
         $this->assign('cate_list',$cate_list);
         $this->layout->title = '上传计划书';
     }
+
+
+    /*
+     * 名师点评(首页)
+     * */
+    public function commentAction() {
+        //读取商业计划书
+        $where = [
+            'AND'=>[
+                'b.status' => TeacherModel::STATUS_OK,
+                'b.user_id'=>$this->user['user_id']
+            ]
+        ];
+        $order_by = 'a.insert_time DESC';
+
+        $page = intval(I('page',0));
+
+        $where['LIMIT'] = [$page*$this->config->application->pagenum,$this->config->application->pagenum];
+        $where['ORDER'] = $order_by;
+
+        $list = M('t_business_plan(a)')->select(
+            [
+                '[>]t_student(b)' => ['a.student_id' => 'id']
+            ],
+            [
+                'a.*',
+            ],
+            $where
+        );
+
+        if(empty($list)) {
+            $this->redirect('/member/plan/index');
+        }
+
+        $this->assign('list',$list);
+        $this->layout->title = '名师点评';
+    }
 }
