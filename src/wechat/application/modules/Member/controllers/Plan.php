@@ -11,7 +11,7 @@ class PlanController extends Mall {
     public function init(){
         parent::init();
         if(empty($this->user['student_id'])){
-            $this->error('请您先做新人报道！');
+            $this->error('请您先做新人报道！',U('/public/reg'),['btn_text'=>'去报道']);
         }
         if($this->user['student_status'] != StudentModel::STATUS_OK){
             $this->error('对不起，您的状态不正常！');
