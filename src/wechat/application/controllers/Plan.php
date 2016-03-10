@@ -259,7 +259,7 @@ class PlanController extends Mall {
         $model  = new BusinessPlanModel();
         $list   = $model->getList($where);
 
-        SeasLog::debug($model->last_query());
+//        SeasLog::debug($model->last_query());
         $this->assign('list',$list);
 //        echo M()->last_query();
 //        die;
