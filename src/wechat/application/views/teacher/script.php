@@ -12,6 +12,17 @@
                 }
             });
         });
+        $(document).on('click','.down-course',function(){
+            var $this = $(this);
+            $.getJSON('<?=U('/plan/downFile')?>',{id:$this.attr('item_id')},function(resp){
+                if(resp.status == '0'){
+                    $this.attr('href',resp.url).removeClass('down-file');
+                    window.location = resp.url;
+                }else{
+                    layer.alert(resp.msg);
+                }
+            });
+        });
         $(document).on('click','.like-plan',function(){
             var $this = $(this);
             $.getJSON($this.attr('url'),function(resp){
@@ -26,4 +37,5 @@
         });
     });
 </script>
+<script src="/js/scroll.page.js"></script>
 </block>

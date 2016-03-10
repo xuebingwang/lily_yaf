@@ -31,7 +31,6 @@ class PlanController extends Mall {
         $order_by = 'a.insert_time DESC';
 
         $page = intval(I('page',0));
-
         $where['LIMIT'] = [$page*$this->config->application->pagenum,$this->config->application->pagenum];
         $where['ORDER'] = $order_by;
 
@@ -113,10 +112,11 @@ class PlanController extends Mall {
      * 名师点评(首页)
      * */
     public function commentAction() {
+        $pagenum = 10;
         //读取商业计划书
         $where = [
             'AND'=>[
-                'b.status' => TeacherModel::STATUS_OK,
+                'b.status' => BusinessPlanModel::STATUS_OK,
                 'b.user_id'=>$this->user['user_id']
             ]
         ];
@@ -124,7 +124,7 @@ class PlanController extends Mall {
 
         $page = intval(I('page',0));
 
-        $where['LIMIT'] = [$page*$this->config->application->pagenum,$this->config->application->pagenum];
+        $where['LIMIT'] = [$page*$pagenum,$pagenum];
         $where['ORDER'] = $order_by;
 
         $list = M('t_business_plan(a)')->select(
@@ -142,6 +142,30 @@ class PlanController extends Mall {
         }
 
         $this->assign('list',$list);
+
+        if(IS_AJAX){
+            if(empty($list)){
+                $this->error('没有更多数据了！');
+            }
+            $this->success('ok','',[
+                    'html'=>$this->render('comment.ajax'),
+                    'list_total'=>count($list),
+                    'page'=>$page+1
+                ]
+            );
+        }
+
+
         $this->layout->title = '名师点评';
+        unset($where['LIMIT']);
+        $count = M('t_business_plan(a)')->count(
+            [
+                '[>]t_student(b)' => ['a.student_id' => 'id']
+            ],
+            '*',
+            $where
+        );
+        $this->getView()->assign('total',intval($count));
+        $this->getView()->assign('page',$page+1);
     }
 }

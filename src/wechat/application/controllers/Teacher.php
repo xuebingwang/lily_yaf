@@ -10,6 +10,7 @@
  * 完成功能如下:
  * 名师推荐 index
  * 名师详情 detail
+ * 名师课件 course
  * */
 class TeacherController extends Core\Mall {
     public function indexAction() {
@@ -43,7 +44,30 @@ class TeacherController extends Core\Mall {
             $where
         );
         $this->assign('list',$list);
+
+        if(IS_AJAX){
+            if(empty($list)){
+                $this->error('没有更多数据了！');
+            }
+            $this->success('ok','',[
+                    'html'=>$this->render('ajax.list'),
+                    'list_total'=>count($list),
+                    'page'=>$page+1
+                ]
+            );
+        }
         $this->layout->title = '名师推荐';
+        unset($where['LIMIT']);
+        $count = M('t_teacher(a)')->count(
+            [
+                '[>]t_user(b)' => ['a.user_id' => 'id'],
+                '[>]t_user_album(c)' => ['a.user_id' => 'user_id','AND'=>['is_cover'=> 'YES']]
+            ],
+            '*',
+            $where
+        );
+        $this->getView()->assign('total',intval($count));
+        $this->getView()->assign('page',$page+1);
     }
 
     public function detailAction($id) {
@@ -85,5 +109,45 @@ class TeacherController extends Core\Mall {
         $this->assign('album', $album);
         $this->assign('teacher', $teacher);
         $this->layout->title="名师详情";
+    }
+
+    public function courseAction() {
+
+        $where = [
+            'AND'=>[
+                'a.status'=>CourseModel::STATUS_OK
+            ]
+        ];
+        $order_by = 'a.insert_time DESC';
+
+        $page = intval(I('page',0));
+        $where['LIMIT'] = [$page*$this->config->application->pagenum,$this->config->application->pagenum];
+        $where['ORDER'] = $order_by;
+
+        $model = new CourseModel();
+        $list = $model->getList($where);
+        var_dump($list);
+        $this->assign('list',$list);
+//        echo M()->last_query();
+//        die;
+        if(IS_AJAX){
+            if(empty($list)){
+                $this->error('没有更多数据了！');
+            }
+            $this->success('ok','',[
+                    'html'=>$this->render('ajax.list'),
+                    'list_total'=>count($list),
+                    'page'=>$page+1
+                ]
+            );
+        }
+
+        $this->layout->title = '名师课件';
+        $this->getView()->assign('total',intval($model->getListCount($where)));
+        $this->getView()->assign('page',$page+1);
+    }
+
+    public function downCourseAction() {
+        
     }
 }

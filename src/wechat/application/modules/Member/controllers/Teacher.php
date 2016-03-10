@@ -152,4 +152,6 @@ class TeacherController extends Mall {
         $this->getResponse()->setBody($this->render('../info/index'));
         return false;
     }
+
+
 }
