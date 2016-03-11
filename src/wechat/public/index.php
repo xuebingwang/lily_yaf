@@ -13,7 +13,6 @@ define ('IS_AJAX',       ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolowe
 
 SeasLog::setLogger('api/lily');
 $config = json_decode(Qconf::getConf("/lily/application.json"),true);
-$config['application']['pagenum'] = 2;
 
 $config['application']['directory'] = APP_PATH;
 
