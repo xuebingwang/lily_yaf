@@ -25,10 +25,10 @@
 <div class="bgshadow"></div>
 <div class="searchbox">
     <?php
-    $name = I('keyword');
+    $name = I('name');
     ?>
     <div class="search_inpt">
-        <form action="<?=U('/teacher/index')?>" method="get">
+        <form action="<?=U('/teacher/course')?>" method="get">
             <input type="text" value="<?= $name ?>" class="inp1" name="name" placeholder="请输入老师名称">
             <input type="submit" value="" class="ico sub">
         </form>

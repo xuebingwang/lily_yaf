@@ -23,4 +23,4 @@
         添加新的课件
     </a>
 </footer>
-<?php require_once APP_PATH.'views/plan/script.php'?>
+<?php require_once('script.php') ?>

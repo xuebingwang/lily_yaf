@@ -2,17 +2,15 @@
     <div class="box kejian">
         <div class="padm17">
             <div class="tit">
-                <?php if(empty($item['wx_id'])):?>
-                <a href="javascript:" class="right download down-file" item_id="<?=$item['id']?>">下载</a>
-                <?php else:?>
-                <a href="<?=get_qiniu_file_durl($item['file'])?>" class="right download">下载</a>
-                <?php endif;?>
                 <?=$item['title']?>
             </div>
             <div class="subtit">
                 <div class="cell class"><?=$item['category_name']?></div>
+                <div class="cell name"><?=$item['name']?></div>
+                <?php $time = strtotime($item['insert_time']);?>
+                <div class="cell date"><?=date('Y-m-d',$time)?> <span class="padl20"><?=date('H:i',$time)?></span></div>
             </div>
-            <a href="<?=U('/plan/detail/id/'.$item['id'])?>">
+            <a href="<?= U('/teacher/detailCourse/id/' . $item['id']) ?>">
                 <div class="pic center">
                     <img src="<?=imageMogr2($item['logo'],325,175)?>" class="img">
                 </div>

@@ -4,9 +4,6 @@
  * User: xiongxin
  * Date: 16/3/10
  * Time: 下午6:16
- *
- *
- *
  */
 
 class CourseModel extends Model{
@@ -50,6 +47,24 @@ class CourseModel extends Model{
         );
     }
 
+    /**
+     * 获取单个course
+     */
+    public function getCourse($where) {
+        return $this->get(
+            [
+                '[>]t_category(b)'=>['a.category'=>'id'],
+                '[>]t_user(c)' => ['a.user_id' => 'id'],
+            ],
+            [
+                'a.*',
+                'b.title(category)',
+                'c.*'
+            ],
+            $where
+        );
+    }
+
     /** no count
      * @param $where
      * @return bool
@@ -58,10 +73,12 @@ class CourseModel extends Model{
         return $this->select(
             [
                 '[>]t_category(b)'=>['a.category'=>'id'],
+                '[>]t_user(c)' => ['a.user_id' => 'id']
             ],
             [
                 'a.*',
                 'b.title(category_name)',
+                'c.name'
             ],
             $where
         );
