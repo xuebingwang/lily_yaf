@@ -97,4 +97,9 @@ class CourseController extends Core\Mall {
         $this->assign('cate_list',$cate_list);
         $this->layout->title = '上传课件';
     }
+
+
+
+
+
 }
