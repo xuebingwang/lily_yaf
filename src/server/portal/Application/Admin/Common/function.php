@@ -706,3 +706,23 @@ function get_subscribe ($subscribe) {
         return '已关注';
     }
  }
+
+/**
+ * 生成select选项
+ * params
+ * array 存在的选项，比如['ok','no']
+ * string 当前状态，比如'ok'
+ * 返回一个select WAT:待审核 YES:审核通过 NO#:审核拒绝
+ */
+function gen_select($options, $value) {
+    $output = '<select>';
+    foreach($options as $k => $v){
+        $output .= '<option value="' . $k . '" '
+            . ( $value == $k ? 'selected="selected"' : '' ) . '>'
+            . $v
+            . '</option>';
+    }
+    $output .= '</select>';
+
+    return $output;
+}

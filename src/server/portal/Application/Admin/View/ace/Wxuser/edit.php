@@ -12,7 +12,8 @@
         echo ace_group(ace_label('城市'),'<div class="line-height-2 blue">'.$info['city'].'</div>');
         echo ace_group(ace_label('省份'),'<div class="line-height-2 blue">'.$info['province'].'</div>');
         echo ace_group(ace_label('国家'),'<div class="line-height-2 blue">'.$info['country'].'</div>');
-        echo ace_group(ace_label('图像地址'),'<div class="line-height-2 blue">'.$info['headimgurl'].'</div>');
+        echo ace_group(ace_label('头像'),'<div class="line-height-2 blue">
+            <img width="150" height="150" src="'.$info['headimgurl'].'"/></div>');
         echo ace_group(ace_label('unionid'),'<div class="line-height-2 blue">'.$info['unionid'].'</div>');
         echo ace_textarea(array('label_text'=>'备注'),'',$info['remark']);
         echo ace_group(ace_label('用户分组'),'<div class="line-height-2 blue">'.$info['groupid'].'</div>');

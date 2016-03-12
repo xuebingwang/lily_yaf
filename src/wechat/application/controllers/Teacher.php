@@ -274,5 +274,6 @@ class TeacherController extends Core\Mall {
         }
         $this->_add_count($id,0,$course['view_count']);
         $this->assign('item', $course);
+        $this->layout->title="课件详情页面";
     }
 }
